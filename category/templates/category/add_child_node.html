@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="{% url 'category:category_add_child' 1 %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add Child">
+{% endblock %}

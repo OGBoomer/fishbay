@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block blurb %}
+	blurb spot if needed
+{% endblock %}
+{% block content %}
+	<div class='row'>
+		<div class='col text-center'>
+			{% for profile in profiles %}
+				<a href="{% url 'searchprofile:profile_detail' profile.pk %}">{{ profile }} ({{ profile.results.count }})<br>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

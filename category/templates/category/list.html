@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% load mptt_tags %}
+{% block title %} List Title {% endblock %}
+{% block content %}
+<h1>Category List</h1>
+	<a href="{% url 'category:category_add_root' %}">Add new Root Category</a><br><br>
+	<ul class="root">
+		{% recursetree categories %}
+			<li>
+				{{ node.name }} <a href="{% url 'category:category_add_child' node.pk %}"> + </a>
+				{% if not node.is_leaf_node %}
+					<ul class="children">
+						{{ children }}
+					</ul>
+				{% endif %}
+			</li>
+		{% endrecursetree %}
+	</ul>
+{% endblock %}

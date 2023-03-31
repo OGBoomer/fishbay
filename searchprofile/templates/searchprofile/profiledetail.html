@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+
+{% block blurb %}
+	blurb spot if needed
+{% endblock %}
+{% block content %}
+	<div class='row mb-4'>
+		<div class='col fw-bold fs-4 text-center'>
+			Profile for <br> {{ profile }}
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col fw-bold fs-5 text-center'>
+			Perform New Search
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col text-center'>
+			Select item specifics
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col text-center mb-2'>
+			<form action="{% url "searchprofile:create_search" %}" method='post'>
+				{% for field in form.visible_fields %}
+					{% if field.label != 'Keywords' %}
+						{{ field.label }}
+						{{ field }}
+					{% endif %}
+				{% endfor %}
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col text-center mb-2'>
+			{{ form.keywords.label }}:{{ form.keywords }}
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col text-center'>
+			  <button type="submit" id="btnSearch" class="btn btn-primary mb-2">Search</button>
+			{% csrf_token %}</form>
+		</div>
+	</div>
+	<div class='row'>
+		{% for result in results %}
+			<div class='col-4 rounded-circle'>
+				<div class='card'>
+					<div class='card-header text-center text-white bg-primary lh-sm'>
+						{% for line in result.spec_line.all %}
+							{{ line.spec_value }} /
+						{% endfor %}
+						<p class='fst-italic'>{{ result.keywords }}</p>
+					</div>
+					<div class='card-body text-center bg-info'>
+						<p class='card-text'>Sale through ratio: {{ result.ratio }}</p>
+						<p class='card-text'>For Sale: {{ result.forsale }}  Avg-Price: ${{ result.avg_forsale_price }}</p>
+						<p class='card-text'>Sold: {{ result.sold }}  Avg-Price: ${{ result.avg_sold_price }}</p>
+						<p class='card-text text-left'>Last Updated: {{ result.last_updated }}</p>
+					</div>
+					<div class='card-footer bg-primary text-white'>
+					<a href="{% url 'searchprofile:update_search' result.pk %}" class="btn btn-primary btnUpdate">Update</a><button type='button' class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#confirmDelete" data-bs-delete-url="{% url 'searchprofile:delete_search' result.pk %}">Delete</button>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+  <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+      </div>
+      <div class="modal-body">
+        <p> Are you Sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-danger" href="#" role="button" id='delete-button'>Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

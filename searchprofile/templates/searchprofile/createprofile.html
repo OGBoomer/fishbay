@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block blurb %}
+Create a new Search Profile
+{% endblock %}
+{% block content %}
+<div class='row'>
+	<div class='col text-center'>
+		{{ form.non_field_errors }}
+		<form action="{% url "searchprofile:create_profile" %}" method='post'>
+			<div>
+				{{ form.brand.errors }}
+				<label for="{{ form.brand.id_for_label }}">Brand</label>
+				{{ form.brand }}
+			
+				{{ form.new_brand.errors }}
+				<label for="{{ form.new_brand.id_for_label }}">or New Brand</label>
+				{{ form.new_brand }}
+			
+				{{ form.category.errors }}
+				<label for="{{ form.category.id_for_label }}">Category</label>
+				{{ form.category }}
+			</div>
+			<div>
+				<input type="submit" value='Add Profile'>
+				{% csrf_token %}
+			</div>
+		</form>
+	</div>
+</div>
+<div class='row'>
+	<div class='col'>
+		Some some random text for context
+	</div>
+</div>
+{% endblock %}

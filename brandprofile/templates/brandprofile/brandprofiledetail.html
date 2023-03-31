@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+
+{% block blurb %}
+	blurb spot if needed
+{% endblock %}
+{% block content %}
+	<div class='row'>
+		<div class='col text-center'>
+			{{ brand_name }}
+		</div>
+	</div>
+	{% for profile in profiles %}
+	<div class='row'>
+		<div class='col text-center'>
+			{{ profile.category }}
+		</div>
+	</div>
+	<div class='row mb-4 justify-content-center'>
+		<div class='col-9 text-center'>
+			{% for result in profile.results.all %}
+				<div class='row justify-content-center bg-info'>
+					<div class='col'>
+						{{ result.ratio }}
+					</div>
+					<div class='col'>
+						Forsale: {{ result.forsale }}
+					</div>
+					<div class='col'>
+						${{result.avg_forsale_price|floatformat:2 }}
+					</div>
+					<div class='col'>
+						Sold: {{ result.sold }}
+					</div>
+					<div class='col'>
+						${{ result.avg_sold_price|floatformat:2 }}
+					</div>
+				</div>
+				<div class='row mb-2'>
+					<div class='col text-end bg-info pe-0'>
+						{% for line in result.spec_line.all %}
+							{{ line.spec_value }} /
+						{% endfor %}
+					</div>
+					<div class='col fst-italic bg-info text-start ps-0'>
+						{{ result.keywords }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endfor %}
+{% endblock %}
