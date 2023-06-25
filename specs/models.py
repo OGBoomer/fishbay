@@ -32,6 +32,14 @@ class SleeveLength(models.Model):
         return self.name
 
 
+class Pattern(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
 class Color(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
@@ -48,9 +56,108 @@ class Material(models.Model):
         return self.name
 
 
-class Size(models.Model):
+class Fit(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Neckline(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Vintage(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class MensGenericFabric(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class MensPantRise(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class MensCollar(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class SizeType(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class GenericSizeType(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class GenericSize(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+    size_type = models.ForeignKey(GenericSizeType, null=False, on_delete=models.CASCADE, related_name='sizetype')
+
+    def __str__(self):
+        return self.name
+
+
+class MensPantSize(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+    size_type = models.ForeignKey(GenericSizeType, null=False, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('name', 'size_type')
+
+    def __str__(self):
+        return self.name
+
+
+class MensPantWaistSize(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class MensPantInseamSize(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name

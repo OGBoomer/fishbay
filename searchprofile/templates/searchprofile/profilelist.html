@@ -1,15 +1,141 @@
-{% extends "base.html" %}
-
-
-{% block blurb %}
-	blurb spot if needed
-{% endblock %}
 {% block content %}
-	<div class='row'>
-		<div class='col text-center'>
-			{% for profile in profiles %}
-				<a href="{% url 'searchprofile:profile_detail' profile.pk %}">{{ profile }} ({{ profile.results.count }})<br>
-			{% endfor %}
+{% block profile-form %}
+<!-- check if browser reload button was used, if so then redirect to home page -->
+<script>
+	window.onload = function(){
+		const id = document.getElementById('top-page');
+		if (id != null) {
+			alert('not null'); // should never fire as only fragment is loaded via htmx not document
+		} else {
+			window.location.replace("http://127.0.0.1:8000/");
+		}
+	}
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  		return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
+</script>
+<div class='container d-flex justify-content-center' id='form-container'>
+	<div class="card mt-5 w-100">
+		<div class="card-body">
+			<div class='row'>
+				<div class='col text-center'>
+					<h5>Create a new profile</h5>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col text-center'>
+				{{ form.non_field_errors }}
+				</div>
+			</div>
+			<div class='row'>	
+				<div class='col text-center'>
+					<form>
+						<div class='d-flex justify-content-start justify-content-lg-center mb-2 flex-wrap'>
+							<div class='mr-2'>
+								{{ form.brand.errors }}
+								<label for="{{ form.brand.id_for_label }}">Brand</label>
+								{{ form.brand }}
+							</div>
+							<div class='mr-2'>
+								{{ form.new_brand.errors }}
+								<label for="{{ form.new_brand.id_for_label }}">or New Brand</label>
+								{{ form.new_brand }}
+							</div>
+							<div>
+								{{ form.category.errors }}
+								<label for="{{ form.category.id_for_label }}">Category</label>
+								{{ form.category }}
+							</div>
+						</div>
+						<div>
+							<button class='btn btn-primary btn-sm'
+								hx-post="{% url 'searchprofile:profile_list' %}" 
+								hx-target='#form-container'
+								hx-swap='outerHTML' 
+								hx-trigger='click'>
+								Create Profile
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
+</div>
+{% endblock %}
+<div class='container d-flex justify-content-center' hx-trigger='profile_added from:body'
+													 hx-get="{% url 'searchprofile:update_profile_list' %}"
+													 hx-target='#profile_list'
+													 hx-swap='innerHTML'>
+	<div class="card mt-5 w-100">
+		<div class="card-body" hx-trigger='check_notice from:body'
+								hx-get="{% url 'searchprofile:check_notice' %}"
+								hx-target='#notice-block'
+								hx-swap='innerHTML'>
+			<div class='row'>
+				<div class='col text-center'>
+					<div id='notice-block'>
+					{% block notice %}
+						{% if notice %}
+							<div class='text-success text-center'>
+								<h6>{{ notice }}</h6>
+							</div>
+						{% endif %}
+					{% endblock %}
+					</div>
+					<h3>Profile List</h3>
+				</div>
+			</div>
+			<div id='profile_list'>
+			{% block profile-list %}
+				{% if profiles.count > 0 %}
+					{% for profile in profiles %}
+						<div class='row mb-2 d-flex' id='profile{{profile.pk}}'>
+							<div class='col-12 col-lg-6 text-nowrap'>	
+								{{ profile }} ({{ profile.results.count }})
+							</div>
+							<div class='col-2'>
+								<button class='btn tt' title='Add/Delete Searches' 
+								hx-get="{% url 'searchprofile:profile_detail' profile.pk %}"
+								hx-target='#newcontent'
+								hx-swap='innerHTML'
+								hx-push-url='true'
+								hx-trigger='click'>
+								<i class="fa-solid fa-clipboard fa-xl"></i> 
+								</button>
+							</div>
+							<div class='col-2'>
+								<button class='btn tt' title='Add/Delete Models'
+								hx-get="{% url 'searchprofile:model_detail' profile.pk %}"
+								hx-target='#newcontent'
+								hx-swap='innerHTML'
+								hx-trigger='click'>
+								<i class="fa-solid fa-list"></i> 
+								</button>
+							</div>
+							<div class='col-2'>
+								<button class='btn tt' title="Delete this profile"
+								hx-get="{% url 'searchprofile:delete_profile' profile.pk %}"
+								hx-target='#profile{{profile.pk}}'
+								hx-swap='delete'
+								hx-confirm='Please confirm you wish to delete. All associated searches will also be deleted'
+								hx-trigger='click'>
+								<i class="fa-solid fa-trash-can fa-xl"></i>
+								</button>
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class='row'>
+						<div class='col'>
+							<div class='text-center card-text'>You haven't created any profiles yet.</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endblock %}
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

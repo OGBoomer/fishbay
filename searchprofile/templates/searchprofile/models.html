@@ -1,0 +1,107 @@
+{% block content %}
+{% block model-form %}
+<!-- check if browser reload button was used, if show redirect to home page -->
+<script>
+    window.onload = function(){
+        const id = document.getElementById('top-page');
+        if (id != null) {
+            alert('not null'); // should never fire as only fragment is loaded via htmx not document
+        } else {
+            window.location.replace("http://127.0.0.1:8000/");
+        }
+    }
+</script>
+<div class='container d-flex justify-content-center' id='form-container'>
+    <div class="card mt-5 w-75">
+        <div class="card-body">
+            <div class='row'>
+                <div class='col text-center'>
+                    <h5>Add a model for:</h5>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col text-center'>
+                    <h5>{{ profile }}</h5>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col text-center'>
+                    {{ form.non_field_errors }}
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col text-center'>
+                    <form>
+                        <input type='text' name='modelname' required='true' class='form-control-sm mr-2'>
+                        <button class='btn btn-primary btn-sm'
+                            hx-post="{% url 'searchprofile:model_detail' profile.pk %}" 
+                            hx-target='#form-container' 
+                            hx-swap='outerHTML'
+                            hx-trigger='click'>
+                            Add Model
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<div class='container d-flex justify-content-center' hx-trigger='model_added from:body'
+                                                        hx-get="{% url 'searchprofile:update_model_list' profile.pk %}"
+                                                        hx-target='#model_list'
+                                                        hx-swap='outerHTML'>
+    <div class="card mt-5 w-100">
+        <div class='card-body' hx-trigger='check_notice from:body'
+                                    hx-get="{% url 'searchprofile:check_notice' %}"
+                                    hx-target='#notice-block'
+                                    hx-swap='innerHTML'>
+            <div id='notice-block'>
+            {% block notice %}
+                {% if notice %}
+                    <div class='text-success text-center'>
+                        <h6>{{ notice }}</h6>
+                    </div>
+                {% endif %}
+            {% endblock %}
+            </div>
+            <div class='row'>
+                <div class='col text-center'>
+                    <h3>Model list</h3>
+                </div>
+            </div>
+            <div id='model_list'>
+                {% block model-list %}
+                {% if profilemodels %}
+                    {% for model in profilemodels %}
+                        <div class='row mb-2' id='model{{model.pk}}'>
+                            <div class='col-4'>
+                            </div>
+                            <div class='col-2 pt-2'>
+                                {{ model.name }}
+                            </div>
+                            <div class='col'>
+                                <button class='btn mb-2'
+                                    hx-post="{% url 'searchprofile:delete_model' profile.pk model.pk %}" 
+                                    hx-target='#model{{model.pk}}' 
+                                    hx-swap='delete'
+                                    hx-trigger='click'>
+                                    <i class="fa-solid fa-trash-can fa-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class='row'>
+                        <div class='col'>
+                                <div class='text-center card-text'>You do not have any models for this profile</div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

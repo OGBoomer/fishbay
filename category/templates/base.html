@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!DocType html>
 <html lang='en'>
 <head>
@@ -6,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
 	<link rel="stylesheet" href="{% static 'css/fishbaybak.css' %}">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'fonta/css/all.css' %}">
 
 	<title>{% block title %}Fishbay App{% endblock %}</title>
 </head>
@@ -19,6 +20,7 @@
 				{% for message in messages %}
 					{{ message }}
 				{% endfor %}
+				<a href="{% url 'account:logoutpage' %}">Logout</a>
 			</div>
 		<div class='row'>
 			<div class='col-2 vh-100 bg-fishbay-menu'>
@@ -42,6 +44,7 @@
 	</div>
 	<script src="{% static 'js/jquery/jquery-3.6.4.min.js' %}"></script>
   	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  	<script src="https://unpkg.com/htmx.org@1.9.0" integrity="sha384-aOxz9UdWG0yBiyrTwPeMibmaoq07/d3a96GCbb9x60f3mOt5zwkjdbcHFnKH8qls" crossorigin="anonymous"></script>
   	<script src="{% static 'js/fishbay/fishbay.js' %}"></script>
 </body>
 </html>

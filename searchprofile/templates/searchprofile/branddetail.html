@@ -1,0 +1,65 @@
+{% block content %}
+	<div class='row'>
+		<div class='col text-center'>
+			<h5>{{ brand.name }}</h5>
+		</div>
+	</div>
+	{% for profile in profiles %}
+	<div class='row'>
+		<div class='col-10 d-flex flex-nowrap'>
+			<div class='text-dark'>
+				{{ profile.category }}
+			</div>
+			<div>
+				<button class='btn tt text-light' title='Open profile detail page'
+									hx-get="{% url 'searchprofile:profile_detail' profile.pk %}"
+									hx-target='#newcontent'
+									hx-swap='innerHTML'
+									hx-push-url='true'
+									hx-trigger='click'>
+									<i class="fa-solid fa-clipboard fa-xl"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class='row mb-4 justify-content-center'>
+		<div class='col-10 bg-info text-dark'>
+			{% if profile.results.count > 0 %}
+				{% for result in profile.results.all %}
+						<div class='row d-flex'>
+							<div class='col'>
+								{{ result.heading }}
+								<span class='fst-italic'>{{ result.keywords }}</span>
+							</div>
+						</div>
+						<div class='row d-flex mb-2'>
+							<div class='col-12 col-lg-2'>
+								Ratio: {{ result.ratio }}
+							</div>
+							<div class='col-12 col-lg-3 text-nowrap d-flex'>
+								<div class='mr-2'>
+									Sold: {{ result.sold }}
+								</div>
+								<div>
+									${{ result.avg_sold_price|floatformat:"2g" }}
+								</div>
+							</div>
+							<div class='col-12 col-lg-3 text-nowrap d-flex'>
+								<div class='mr-2'>
+									Forsale: {{ result.forsale }}
+								</div>
+								<div>
+									${{result.avg_forsale_price|floatformat:"2g" }}
+								</div>
+							</div>
+						</div>
+				{% endfor %}
+			{% else %}
+				<div>
+					You haven't done any searches for this profile yet.
+				</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% block result-item %}
+<div class='card' id='result{{ result.pk }}'>
+	<div class='card-header text-center text-white bg-primary lh-sm'>
+		{% for item_details in result.item.all %}
+			{{ item_details.heading }}
+				<div class='text-center fst-italic'>{{ item_details.keywords|default_if_none:"" }}</div>
+		{% endfor %}
+	</div>
+	<div class='card-body text-center text-dark bg-info'>
+		<p class='card-text'>Sale through ratio: {{ result.ratio }}</p>
+		<p class='card-text'>For Sale: {{ result.forsale }}  Avg-Price: ${{ result.avg_forsale_price|floatformat:"2g" }}</p>
+		<p class='card-text'>Sold: {{ result.sold }}  Avg-Price: ${{ result.avg_sold_price|floatformat:"2g" }}</p>
+		<p class='card-text text-left'>Last Updated: {{ result.last_updated }}</p>
+	</div>
+	<div class='card-footer bg-primary text-white'>
+		<button class="btn btn-primary btnUpdate" 
+							hx-trigger='click'
+							hx-get="{% url 'searchprofile:update_search' result.pk %}"
+							hx-target='#result{{ result.pk }}'
+							hx-swap='outerHTML'
+							hx-indicator='#spinner'>
+							Update
+		</button>
+		<button class='btn btn-primary' hx-trigger='click'
+							hx-get="{% url 'searchprofile:delete_search' result.pk %}"
+							hx-target='#result{{ result.pk }}'
+							hx-swap='delete'
+							hx-confirm='Please confirm you wish to delete.'
+							hx-indicator='#spinner'>
+							Delete
+		</button>
+	</div>
+</div>
+{% endblock %}

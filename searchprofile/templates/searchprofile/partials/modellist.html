@@ -1,0 +1,20 @@
+{% if profilemodels %}
+	{% for model in profilemodels %}
+		<div class='container border border-5'>
+			<div class='row'>
+				<div class='col'>
+					{{ model.name }}
+				</div>
+				<div class='col'>
+					<form>{% csrf_token %}
+						<button hx-post="{% url 'searchprofile:delete_model' profile.pk model.pk %}" hx-target='#modellist' type="submit" class="btn btn-primary mb-2">
+							<i class="fa-solid fa-trash-can"></i>
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% else %}
+	<div class='mt-3'>{{ code }} You do not have any models for this profile</div>
+{% endif %}

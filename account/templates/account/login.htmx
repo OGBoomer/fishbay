@@ -1,0 +1,35 @@
+{% extends 'index.htmx' %}
+
+{% block content %}
+<div class='d-flex justify-content-center'>
+    <div class="card fishbay-card mt-5">
+        <div class="card-body">
+            <div class='d-flex-column'>
+                <h1 class="h4 text-gray-900 mb-4 text-center">Welcome Back!</h1>
+                {% for message in messages %}
+                    <div class='text-center'>{{ message }}</div>
+                {% endfor %}
+               <form class="user" method='post' action="{% url 'account:loginpage' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="email" class="form-control form-control-user"
+                                                name="email" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address...">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-user"
+                                                name="password" placeholder="Password">
+                </div>
+                <button class="btn btn-primary">Login</button>
+                <hr>
+                <div class="text-center">
+                    <a class="small" href="forgot-password.html">Forgot Password?</a>
+                </div>
+                <div class="text-center">
+                    <a class="small" href="{% url 'account:register' %}">Create an Account!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

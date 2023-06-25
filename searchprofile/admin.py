@@ -1,8 +1,11 @@
 from django.contrib import admin
-from searchprofile.models import *
+from django.apps import apps
 
 
-admin.site.register(SearchProfile)
-admin.site.register(SearchResult)
-admin.site.register(ResultSpecs)
-admin.site.register(AllowedSpecs)
+searchprofile_models = apps.get_app_config('searchprofile').get_models()
+
+for model in searchprofile_models:
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        pass

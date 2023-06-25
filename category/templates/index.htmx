@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Ebay research tool">
+    <meta name="author" content="delanodynasty">
+    <title>My FishBay</title>
+
+
+    <link href="{% static 'fonta/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/fishbay.css' %}" rel="stylesheet" type="text/css">
+
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+</head>
+<body id="page-top" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+  <div class='d-flex'>
+    <div id='sidebar'>
+      <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-fish-fins"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">My Fishbay Beta </div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'account:homepage' %}">
+                    <i class="fas fa-fw fa-house"></i>
+                    <span>Home</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a class="nav-link" 
+                    hx-target='#newcontent' 
+                    hx-push-url='true' 
+                    hx-trigger='click'
+                    hx-swap='innerHTML' 
+                    hx-get="{% url 'searchprofile:profile_list' %}">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Profile List</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a class="nav-link"
+                    hx-target='#newcontent' 
+                    hx-push-url='true' 
+                    hx-trigger='click'
+                    hx-swap='innerHTML' 
+                    hx-get="{%url 'searchprofile:brand_list' %}">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Brands List</span></a>
+            </li>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-user-pen"></i>
+                    <span>Account</span></a>
+            </li>
+        </ul>
+    </div>
+    <div id="maincontent" class='flex-grow-1'>
+      <div class='d-flex-column'>
+        <div id='topbar' class='d-flex justify-content-center p-3 navbar topbar bg-white topbar mb-4 static-top shadow'>
+          <div class='flex-grow-1 d-none d-md-flex'><h3>An Ebay Research Tool</h3></div>
+          {% if request.user.is_authenticated %}
+            <div class='m-2'><a href="{% url 'account:logoutpage' %}">Logout</a></div>
+          {% else %}
+            <div class='m-2'><a href="{% url 'account:loginpage' %}">Login</a></div>
+          {% endif %}
+          <i class="fa-solid fa-anchor p-2"></i>
+        </div>
+        <div id='newcontent'>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+  </div>
+
+
+    <script src="{% static 'js/jquery/jquery-3.6.4.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <!-- <script src="{% static 'js/fishbay/htmx.min.js' %}"></script> -->
+    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/debug.js"></script>
+    <script>
+    const tooltips = document.querySelectorAll('.tt')
+    tooltips.forEach(t => {
+        new bootstrap.Tooltip(t)
+    })
+    </script>
+</body>

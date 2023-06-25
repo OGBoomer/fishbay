@@ -1,0 +1,31 @@
+<div class='container d-flex justify-content-center'>
+	<div class="card mt-5 w-100">
+		<div class="card-body">
+			<div class='row'>
+				<div class='col text-center'>
+					<h2>Profile List</h2>
+				</div>
+			</div>
+		{% if profiles.count > 0 %}
+			{% for profile in profiles %}
+				<div class='row'>
+					<div class='col-2'>
+					</div>
+					<div class='col'>	
+						<a href="{% url 'searchprofile:profile_detail' profile.pk %}">{{ profile }} ({{ profile.results.count }})</a>
+					</div>
+					<div class='col'>
+						<a href="{% url 'searchprofile:model_detail' profile.pk %}">--- Manage Models </a>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class='row'>
+				<div class='col'>
+					<div class='text-center card-text'>You haven't created any profiles yet.</div>
+				</div>
+			</div>
+		{% endif %}
+		</div>
+	</div>
+</div>

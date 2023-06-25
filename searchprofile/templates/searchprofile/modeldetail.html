@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	<div class='row mb-4'>
+		<div class='col fw-bold fs-4 text-center'>
+			Model list for <br> {{ profile }}
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col text-center'>
+			<form>
+			{% csrf_token %}
+			<input type='text' name='modelname' class='form-control-sm mr-2'>
+			<button hx-post="{% url 'searchprofile:add_model' profile.pk %}" hx-target='#modellist' type="submit" class="btn btn-primary mb-2">Add Model</button>
+			</form>
+		</div>
+	</div>
+	<div class='row>
+		<div class='col text-center' id='modellist'>
+				{% include 'searchprofile/partials/modellist.html' %}
+		</div>
+	</div>
+{% endblock %}

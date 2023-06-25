@@ -1,26 +1,37 @@
 from django.db import models
 from category.models import Category
-from specs.models import SpecsList
-from brandprofile.models import Brand
+from specs.models import *
+from django.conf import settings
+from size.models import *
 
 # Main object acted on for application
+
+
+class Brand(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE, related_name='brand_user')
+    name = models.CharField(max_length=100, blank=True, null=True)
+    code = models.CharField(max_length=100, blank=True, null=True)
+    keyword = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('user', 'name')
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class SearchProfile(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('brand', 'category',)
+        unique_together = ('brand', 'category', 'user')
         ordering = ['brand__name']
 
-    def get_allowed_spec_names(self):
-        spec_names = AllowedSpecs.objects.filter(category=self.category).prefetch_related('spec_names').values_list('spec__name', flat=True)
-        spec_names = [spec_name.lower().replace(' ', '') for spec_name in spec_names]
-        return spec_names
-
     def __str__(self):
-        return f'{self.brand} -- {self.category}'
+        return f'{self.brand} - {self.category}'
 
 
 class SearchResult(models.Model):
@@ -31,28 +42,55 @@ class SearchResult(models.Model):
     avg_sold_price = models.FloatField(null=False)
     ratio = models.FloatField(null=False)
     search_url = models.URLField(max_length=300, null=False)
-    keywords = models.TextField(null=True)
+    keywords = models.CharField(max_length=250, blank=True, null=True)
+    heading = models.CharField(max_length=100, null=False)
     last_updated = models.DateField(auto_now=True)
 
     def __str__(self):
         return f'{self.profile} -- {self.last_updated}'
 
 
-class ResultSpecs(models.Model):
-    result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, related_name='spec_line')
-    spec_name = models.CharField(max_length=100, null=False)
-    spec_value = models.CharField(max_length=100, null=False)
-
-    def __str__(self):
-        return f'{self.spec_name} -- {self.spec_value}'
-
-
-class AllowedSpecs(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    spec = models.ForeignKey(SpecsList, related_name='spec_id', on_delete=models.CASCADE)
+class ProfileModel(models.Model):
+    profile = models.ForeignKey(SearchProfile, on_delete=models.CASCADE, related_name='models')
+    name = models.CharField(max_length=100, null=False)
+    code = models.CharField(max_length=100, null=False)
 
     class Meta:
-        unique_together = ('category', 'spec',)
+        ordering = ['name']
+        unique_together = ('profile', 'name',)
 
     def __str__(self):
-        return f'{self.category} -- {self.spec}'
+        return self.name
+
+
+class MensClothingItem(models.Model):
+    vintage = models.CharField(max_length=30, blank=True, null=True)
+    condition = models.CharField(max_length=30, blank=True, null=True)
+    size_type = models.CharField(max_length=30, blank=True, null=True)
+    size = models.CharField(max_length=30, blank=True, null=True)
+    material = models.CharField(max_length=30, blank=True, null=True)
+    pattern = models.CharField(max_length=30, blank=True, null=True)
+    color = models.CharField(max_length=30, blank=True, null=True)
+    fit = models.CharField(max_length=30, blank=True, null=True)
+    fabric = models.CharField(max_length=30, blank=True, null=True)
+    item_model = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class GenericMensTop(MensClothingItem):
+    sleeve_length = models.CharField(max_length=30, blank=True, null=True)
+    collar = models.CharField(max_length=30, blank=True, null=True)
+    result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
+class GenericMensPolo(GenericMensTop):
+    neckline = models.CharField(max_length=50, blank=True, null=True)
+
+
+class GenericMensPant(MensClothingItem):
+    waist_size = models.CharField(max_length=20, blank=True, null=True)
+    inseam = models.CharField(max_length=20, blank=True, null=True)
+    rise = models.CharField(max_length=20, blank=True, null=True)
+    result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
