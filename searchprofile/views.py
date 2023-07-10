@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from django.core.mail import send_mail
+from O365 import Account
 from specs.models import *
 from .models import *
 from .forms import *
@@ -406,13 +408,22 @@ def jplay(request):
     # data_listfabric = ['Canvas', 'Chambray', 'Chiffon', 'Corduroy', 'Crochet', 'Damask', 'Denim', 'Down',
     #              'Flannel', 'Fleece', 'Jersey', 'Knit', 'Lace', 'Microfiber', 'Rayon', 'Satin', 'Tweed',
     #              'Twill', 'Velvet', 'Woven']
-    data_list = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
-                 'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
-                 'V-Neck']
-    for data in data_list:
-        code = ('&Neckline' + data).replace('/', '%252F').replace(' ', '%2520').replace('-', '%252D')
-        Neckline.objects.create(name=data, code=code)
-        print(f'{data} added')
+    # data_list = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
+    #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
+    #              'V-Neck']
+    # for data in data_list:
+    #     code = ('&Neckline' + data).replace('/', '%252F').replace(' ', '%2520').replace('-', '%252D')
+    #     Neckline.objects.create(name=data, code=code)
+    #     print(f'{data} added')
 
-    print("all done")
+    # print("all done")
+
+    send_mail(
+        'This is subject Line',
+        'A message to test with',
+        'mikem@myfishbay.com',
+        ['mikemabe@att.net'],
+        fail_silently=False,
+    )
+    print("done")
     return render(request, 'searchprofile/jayplay.html')
