@@ -270,7 +270,7 @@ def build_search_heading(form_data):
 def build_url_string(post_items, profile):
     post_items.pop('profile_id', None)
     post_items.pop('item_type', None)
-    url_string = f'https://www.ebay.com/sch/{profile.category.code}/i.html?{profile.brand.code}&_dcat={profile.category.code}&LH_BIN=1&_ipg=240'
+    url_string = f'https://www.ebay.com/sch/{profile.category.code}/i.html?{profile.brand.code}&_dcat={profile.category.code}&LH_BIN=1&_ipg=240&LH_PrefLoc=1'
     for key, value in post_items.items():
         print(key)
         if key == 'vintage':
