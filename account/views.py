@@ -23,7 +23,7 @@ def loginpage(request):
             return redirect('account:homepage')
         else:
             messages.error(request, 'Login Failed')
-    return render(request, 'account/login.htmx')
+    return render(request, 'account/login.html')
 
 
 def register(request):
@@ -35,12 +35,12 @@ def register(request):
         if form.is_valid():
             print('before save')
             form.save()
-            return render(request, 'account/login.htmx')
+            return render(request, 'account/login.html')
         else:
             print("not valid")
     else:
         form = UserCreationForm()
-    return render(request, 'account/register.htmx', {'form': form})
+    return render(request, 'account/register.html', {'form': form})
 
 
 def logoutpage(request):

@@ -1,44 +1,35 @@
 {% extends 'index.htmx' %}
+
 {% block content %}
-<div class='row'>
-    <div class='col'>
-<div class="d-flex justify-content-center h-100">
-            <div class="user_card">
-                <div class="d-flex justify-content-center">
-
-
-                    <h3 id="form-title">LOGIN</h3>
+<div class='d-flex justify-content-center'>
+    <div class="card w-50 mt-5">
+        <div class="card-body">
+            <div class='d-flex-column'>
+                <h1 class="h4 text-gray-900 mb-4 text-center">Welcome Back!</h1>
+                {% for message in messages %}
+                    <div class='text-center'>{{ message }}</div>
+                {% endfor %}
+               <form class="user" method='post' action="{% url 'account:loginpage' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="email" class="form-control form-control-user"
+                                                name="email" aria-describedby="emailHelp"
+                                                placeholder="Enter Email Address...">
                 </div>
-                <div class="d-flex justify-content-center form_container">
-                    <form method="POST" action="{% url 'account:loginpage' %}">
-                        {% csrf_token %}
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            </div>
-                            <input type="text" name="username" placeholder="Username..." class="form-control">
-                        </div>
-                        <div class="input-group mb-2">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                                <input type="password" name="password" placeholder="Password..." class="form-control" >
-                        </div>
-
-                            <div class="d-flex justify-content-center mt-3 login_container">
-                                <input class="btn login_btn" type="submit" value="Login">
-                            </div>
-                    </form>
-
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-user"
+                                                name="password" placeholder="Password">
                 </div>
-
-                <div class="mt-4">
-                    <div class="d-flex justify-content-center links">
-                        Don't have an account? <a href="{% url 'account:register' %}" class="ml-2">Sign Up</a>
-                    </div>
-
+                <button class="btn btn-primary">Login</button>
+                <hr>
+                <div class="text-center">
+                    <a class="small" href="{% url 'reset_password' %}">Forgot Password?</a>
+                </div>
+                <div class="text-center">
+                    <a class="small" href="{% url 'account:register' %}">Create an Account!</a>
                 </div>
             </div>
         </div>
-    </div></div>
+    </div>
+</div>
 {% endblock %}

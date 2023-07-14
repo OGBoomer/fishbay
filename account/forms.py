@@ -1,9 +1,13 @@
 from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Account
 from .admin import UserCreationForm
+
+
+class FishbaySetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(widget=forms.PasswordInput(render_value=False), max_length=100, required=True, label='Password')
 
 
 # class CreateAccountForm(UserCreationForm):

@@ -1,80 +1,46 @@
-{% extends 'base.html' %}
+{% extends 'index.htmx' %}
 
-{% block blurb %}
-{% endblock %}
 {% block content %}
-<div class='row'>
-    <div class='col'>
-        <div class="d-flex justify-content-center h-100">
-            <div class="user_card">
-                <div class="d-flex justify-content-center">
-                    <h3 id="form-title">REGISTER ACCOUNT</h3>
+<div class='d-flex justify-content-center'>
+    <div class="card mt-5 fishbay-card">
+        <div class="card-body">
+            <div class='d-flex-column'>
+                <h1 class="h4 text-gray-900 mb-4 text-center">Register Acocunt</h1>
+                {% for message in messages %}
+                    <div class='text-center'>{{ message }}</div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <div class='alert alert-danger'>{{ form.non_field_errors }}</div>
+                {% endif %}
+               <form class="user">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class='text-center alert-danger'>{{ form.username.errors }}</div>
+                    <input type="text" class="form-control form-control-user"
+                                                name="username" placeholder="Enter Username...">
                 </div>
-                <div class="d-flex justify-content-center form_container fishbay_bg">
-
-                    <form method="POST" action="">
-                        {% csrf_token %}
-                        {% if form.errors %}
-                        <div class='alert alert-danger'>
-                            {{ form.errors }}
-                        </div>
-                        {% endif %}
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            </div>
-                            {{ form.username }}
-                        </div>
-                        <div class="input-group mb-2">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
-                            </div>
-                            {{ form.email }}
-                        </div>
-                        <div class="input-group mb-2">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                            {{ form.password1 }}
-                        </div>
-                        <div class="input-group mb-2">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                            {{ form.password2 }}
-                        </div>
-
-                        <div class="d-flex justify-content-center mt-3 login_container">
-                            <input class="btn login_btn" type="submit" value="Register Account">
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <div class='text-center alert-danger'>{{ form.email.errors }}</div>
+                    <input type="email" class="form-control form-control-user"
+                                                name="email" placeholder="Enter Email Address...">
                 </div>
-
-                <div class="mt-4">
-                    <div class="d-flex justify-content-center links">
-                        Already have an account? <a href="{% url 'account:loginpage' %}" class="ml-2">Login</a>
-                    </div>
+                <div class="form-group">
+                    <div class='text-center alert-danger'>{{ form.password1.errors }}</div>
+                    <input type="password" class="form-control form-control-user"
+                                                name="password1" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <div class='text-center alert-danger'>{{ form.password2.errors }}</div>
+                    <input type="password" class="form-control form-control-user"
+                                                name="password2" placeholder="Re-enter Password">
+                </div>
+                <button class="btn btn-primary btn-user btn-block" hx-post="{% url 'account:register' %}" hx-target='body'>Create Account</button>
+                <hr>
+                <div class="text-center">
+                    <a class="small" href="{% url 'account:loginpage' %}">Already have an account?</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-                        <script>/* Because i didnt set placeholder values in forms.py they will be set here using vanilla Javascript
-        //We start indexing at one because CSRF_token is considered and input field
-         */
-
-        //Query All input fields
-        var form_fields = document.getElementsByTagName('input')
-        form_fields[1].placeholder='Username..';
-        form_fields[2].placeholder='Email..';
-        form_fields[3].placeholder='Enter password...';
-        form_fields[4].placeholder='Re-enter Password...';
-
-
-        for (var field in form_fields){
-            form_fields[field].className += ' form-control'
-        }
-    </script>
 {% endblock %}
