@@ -174,7 +174,7 @@ def create_search(request):
     if request.method == 'POST':
         form = get_form_by_type(form_data=request.POST, profile=profile)
         # form = GenericMensTopForm(request.POST, profile=profile)
-        url_string = build_url_string(request, profile)
+        url_string = build_url_string(request.POST.copy(), profile)
         if url_string:
             data = get_search_data(url_string)
             heading = build_search_heading(request.POST.copy())
@@ -267,14 +267,18 @@ def build_search_heading(form_data):
     return result_heading
 
 
-def build_url_string(request, profile):
-    url_string = f'https://www.ebay.com/sch/{profile.category.code}/i.html?{profile.brand.code}&_dcat={profile.category.code}&LH_BIN=1'
-    for key, value in request.POST.items():
-        if value and key != 'profile_id' and key != 'item_type':
-            if key == 'vintage':
-                url_string += '&Vintage=Yes'
-            else:
-                url_string += value
+def build_url_string(post_items, profile):
+    post_items.pop('profile_id', None)
+    post_items.pop('item_type', None)
+    url_string = f'https://www.ebay.com/sch/{profile.category.code}/i.html?{profile.brand.code}&_dcat={profile.category.code}&LH_BIN=1&_ipg=240'
+    for key, value in post_items.items():
+        print(key)
+        if key == 'vintage':
+            url_string += '&Vintage=Yes'
+        elif key == 'keywords':
+            url_string += '&_nkw=' + value
+        else:
+            url_string += value
     return url_string
 
 
