@@ -125,9 +125,13 @@ class GenericMensTopForm(GenericMensClothingForm):
     collar = EmptyChoiceField(choices=MensCollar.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
 
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
 
 class GenericMensPoloForm(GenericMensTopForm):
     neckline = EmptyChoiceField(choices=Neckline.objects.values_list('code', 'name'), required=False)
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class GenericMensPantForm(GenericMensClothingForm):
@@ -135,6 +139,8 @@ class GenericMensPantForm(GenericMensClothingForm):
     inseam = EmptyChoiceField(choices=MensPantInseamSize.objects.values_list('code', 'name'), required=False)
     rise = EmptyChoiceField(choices=MensPantRise.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class SizeUpdateForm(forms.Form):

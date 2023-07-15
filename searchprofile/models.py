@@ -41,9 +41,9 @@ class SearchResult(models.Model):
     sold = models.PositiveIntegerField(null=False)
     avg_sold_price = models.FloatField(null=False)
     ratio = models.FloatField(null=False)
-    search_url = models.URLField(max_length=300, null=False)
+    search_url = models.URLField(max_length=350, null=False)
     keywords = models.CharField(max_length=250, blank=True, null=True)
-    heading = models.CharField(max_length=100, null=False)
+    heading = models.CharField(max_length=200, null=False)
     last_updated = models.DateField(auto_now=True)
 
     def __str__(self):
