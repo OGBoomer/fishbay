@@ -138,10 +138,12 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
     match item_type:
         case 'GMT':
             form = GenericMensTopForm(data=field_data, profile=profile)
-        case 'GMP' | 'GMS':
+        case 'GMP':
             form = GenericMensPantForm(data=field_data, profile=profile)
         case 'GMO':
             form = GenericMensPoloForm(data=field_data, profile=profile)
+        case 'GMS':
+            form = GenericMensShortForm(data=field_data, profile=profile)
         case _:
             pass
     return form
@@ -233,10 +235,12 @@ def get_object_by_type(item_type, result):
     match item_type:
         case 'GMT':
             item_object = GenericMensTop.objects.create(result=result)
-        case 'GMP' | 'GMS':
+        case 'GMP':
             item_object = GenericMensPant.objects.create(result=result)
         case 'GMO':
             item_object = GenericMensPolo.objects.create(result=result)
+        case 'GMS':
+            item_object = GenericMensShort.objects.create(result=result)
         case _:
             pass
     return item_object
@@ -412,13 +416,14 @@ def jplay(request):
     # data_listfabric = ['Canvas', 'Chambray', 'Chiffon', 'Corduroy', 'Crochet', 'Damask', 'Denim', 'Down',
     #              'Flannel', 'Fleece', 'Jersey', 'Knit', 'Lace', 'Microfiber', 'Rayon', 'Satin', 'Tweed',
     #              'Twill', 'Velvet', 'Woven']
-    # data_list = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
+    # data_listneckline = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
     #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
     #              'V-Neck']
-    data_list = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
+    # data_listclousure = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
+    data_list = ['Bermuda', 'Biker', 'Cargo', 'Chino', 'Sweat']
     for data in data_list:
-        code = '&Closure=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        MensPantClosure.objects.create(name=data, code=code)
+        code = '&Style=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        MensShortStyle.objects.create(name=data, code=code)
         print(f'{data} added')
 
     print("all done")

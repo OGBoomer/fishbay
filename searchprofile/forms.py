@@ -144,6 +144,12 @@ class GenericMensPantForm(GenericMensClothingForm):
     field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'closure', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
+class GenericMensShortForm(GenericMensPantForm):
+    style = EmptyChoiceField(choices=MensShortStyle.objects.values_list('code', 'name'), required=False)
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'style', 'closure', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
+
 class SizeUpdateForm(forms.Form):
     size = EmptyChoiceField(required=False)
 
@@ -161,7 +167,7 @@ def get_size_qs_by_type(size_type, item_type):
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = MensPantSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case _:
-            print('no matach')
+            print('no match')
             qs = ''
     return qs
 

@@ -95,3 +95,7 @@ class GenericMensPant(MensClothingItem):
     rise = models.CharField(max_length=20, blank=True, null=True)
     closure = models.CharField(max_length=20, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
+class GenericMensShort(GenericMensPant):
+    style = models.CharField(max_length=20, blank=True, null=True)
