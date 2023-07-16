@@ -161,3 +161,14 @@ class MensPantInseamSize(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class MensPantClosure(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

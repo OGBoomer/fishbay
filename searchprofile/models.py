@@ -93,4 +93,5 @@ class GenericMensPant(MensClothingItem):
     waist_size = models.CharField(max_length=20, blank=True, null=True)
     inseam = models.CharField(max_length=20, blank=True, null=True)
     rise = models.CharField(max_length=20, blank=True, null=True)
+    closure = models.CharField(max_length=20, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)

@@ -138,7 +138,7 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
     match item_type:
         case 'GMT':
             form = GenericMensTopForm(data=field_data, profile=profile)
-        case 'GMP':
+        case 'GMP' | 'GMS':
             form = GenericMensPantForm(data=field_data, profile=profile)
         case 'GMO':
             form = GenericMensPoloForm(data=field_data, profile=profile)
@@ -233,7 +233,7 @@ def get_object_by_type(item_type, result):
     match item_type:
         case 'GMT':
             item_object = GenericMensTop.objects.create(result=result)
-        case 'GMP':
+        case 'GMP' | 'GMS':
             item_object = GenericMensPant.objects.create(result=result)
         case 'GMO':
             item_object = GenericMensPolo.objects.create(result=result)
@@ -258,7 +258,7 @@ def build_search_heading(form_data):
                 value = list(Condition.objects.filter(code=value).values_list('name', flat=True))[0]
             else:
                 count += 1
-                value = value.partition('=')[2].replace('%2520', ' ').replace('%2527', '\'').replace('%2526', '&')
+                value = value.partition('=')[2].replace('%2520', ' ').replace('%2527', '\'').replace('%2526', '&').replace('%252D', '-')
             if count > 0:
                 heading_value = ' / ' + value
             else:
@@ -415,19 +415,20 @@ def jplay(request):
     # data_list = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
     #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
     #              'V-Neck']
-    # for data in data_list:
-    #     code = ('&Neckline' + data).replace('/', '%252F').replace(' ', '%2520').replace('-', '%252D')
-    #     Neckline.objects.create(name=data, code=code)
-    #     print(f'{data} added')
+    data_list = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
+    for data in data_list:
+        code = '&Closure=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        MensPantClosure.objects.create(name=data, code=code)
+        print(f'{data} added')
 
-    # print("all done")
+    print("all done")
 
-    send_mail(
-        'This is subject Line',
-        'A message to test with',
-        'mikem@myfishbay.com',
-        ['mikemabe@att.net'],
-        fail_silently=False,
-    )
-    print("done")
+    # send_mail(
+    #     'This is subject Line',
+    #     'A message to test with',
+    #     'mikem@myfishbay.com',
+    #     ['mikemabe@att.net'],
+    #     fail_silently=False,
+    # )
+    # print("done")
     return render(request, 'searchprofile/jayplay.html')
