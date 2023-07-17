@@ -183,3 +183,57 @@ class MensShortStyle(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class MensJacketStyle(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class JacketOuterShell(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class JacketLining(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class JacketInsulation(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class MensJacketType(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class MensJacketClosure(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name

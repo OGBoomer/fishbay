@@ -420,7 +420,10 @@ def jplay(request):
     #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
     #              'V-Neck']
     # data_listclousure = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
-    data_list = ['Bermuda', 'Biker', 'Cargo', 'Chino', 'Sweat']
+    # data_listshortstype = ['Bermuda', 'Biker', 'Cargo', 'Chino', 'Sweat']
+    data_list = ['Blazer', 'Cape', 'Coat', 'Coatigan', 'Jacket', 'Poncho', 'Vest']
+    data_list = ['3-in-1 Jacket', 'Anorak', 'Biker', 'Bomber Jacket', 'Military Jacket', 'Motorcycle Jacket', 'Overcoat', 'Parka',
+                 'Pea Coat', 'Puffer Jacket', 'Quilted', 'Rain Coat', 'Trench Coat', 'Varsity Jacket', 'Windbreaker']
     for data in data_list:
         code = '&Style=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
         MensShortStyle.objects.create(name=data, code=code)
