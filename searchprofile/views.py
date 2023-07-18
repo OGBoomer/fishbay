@@ -144,6 +144,8 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
             form = GenericMensPoloForm(data=field_data, profile=profile)
         case 'GMS':
             form = GenericMensShortForm(data=field_data, profile=profile)
+        case 'CJV':
+            form = MensJacketForm(data=field_data, profile=profile)
         case _:
             pass
     return form
@@ -241,6 +243,8 @@ def get_object_by_type(item_type, result):
             item_object = GenericMensPolo.objects.create(result=result)
         case 'GMS':
             item_object = GenericMensShort.objects.create(result=result)
+        case 'CJV':
+            item_object = GenericMensJacket.objects.create(result=result)
         case _:
             pass
     return item_object
@@ -409,6 +413,17 @@ def jplay(request):
     # 'Patent Leather', 'Polyacrylate Fiber', 'Polyamide', 'Polycarbamide', 'Polyester',
     # 'Polyester Blend', 'Polyethylene', 'Polylactide', 'Polyurethane', 'Ramie', 'Silk',
     # 'Spandex', 'Suede', 'Viscose', 'Wool']
+    # data_listshell = ['Acelate', 'Alpaca', 'Angora', 'Animal Hair', 'Bamboo', 'Camel',
+    #              'Cashmere', 'Cotton', 'Cotton Blend', 'Cupro', 'Elastodiene', 'Faux Fur', 'Flax Fur',
+    #              'Fur', 'Hemp', 'Leather', 'Linen', 'Llama', 'Lyocell', 'Modacrylic', 'Modal', 'Mohair', 'Nylon',
+    #              'Patent Leather', 'Polyamide', 'Polyester', 'Polyethylene', 'Polyimide', 'Polylactide', 'Polypropylene',
+    #              'Polyurethane', 'PVC', 'Ramie', 'Silk', 'Spandex', 'Suede', 'Tweed', 'Twill', 'Velour', 'Velvet', 'Viscose',
+    #              'Wool', 'Yak']
+    data_list = ['Acelate', 'Acrylic', 'Alpaca', 'Angora', 'Animal Hair', 'Bamboo', 'Camel',
+                 'Cashgora', 'Cashmere', 'Coir', 'Cotton', 'Cupro', 'Elastodiene', 'Faux Fur', 'Faux Leather', 'Flax',
+                 'Fur', 'Hemp', 'Leather', 'Linen', 'Llama', 'Lyocell', 'Modacrylic', 'Modal', 'Mohair', 'Nylon',
+                 'Patent Leather', 'Polyamide', 'Polyester', 'Polyethylene', 'Polyimide', 'Polylactide', 'Polypropylene',
+                 'Polyurethane', 'Ramie', 'Silk', 'Spandex', 'Suede', 'Tweed', 'Twill', 'Viscose', 'Wool', 'Yak']
     # data_listcolor = ['Beige', 'Black', 'Blue', 'Brown', 'Clear', 'Gold', 'Gray', 'Green', 'Ivory', 'Multicolor', 'Orange', 'Pink', 'Purple', 'Red', 'Silver', 'White', 'Yellow']
     # data_listcollar = ['Band', 'Button-Down', 'Cutaway', 'Point', 'Sailor', 'Spread', 'Stand-Up', 'Wing']
     # data_listfit = ['Athletic', 'Classic', 'Extra Slim', 'Regular', 'Relaxed', 'Slim']
@@ -419,14 +434,16 @@ def jplay(request):
     # data_listneckline = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
     #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
     #              'V-Neck']
-    # data_listclousure = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
+    # data_listclosure = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
     # data_listshortstype = ['Bermuda', 'Biker', 'Cargo', 'Chino', 'Sweat']
-    data_list = ['Blazer', 'Cape', 'Coat', 'Coatigan', 'Jacket', 'Poncho', 'Vest']
-    data_list = ['3-in-1 Jacket', 'Anorak', 'Biker', 'Bomber Jacket', 'Military Jacket', 'Motorcycle Jacket', 'Overcoat', 'Parka',
-                 'Pea Coat', 'Puffer Jacket', 'Quilted', 'Rain Coat', 'Trench Coat', 'Varsity Jacket', 'Windbreaker']
+    # data_listjackettype = ['Blazer', 'Cape', 'Coat', 'Coatigan', 'Jacket', 'Poncho', 'Vest']
+    # data_listjacketstyle = ['3-in-1 Jacket', 'Anorak', 'Biker', 'Bomber Jacket', 'Military Jacket', 'Motorcycle Jacket', 'Overcoat', 'Parka',
+    #             'Pea Coat', 'Puffer Jacket', 'Quilted', 'Rain Coat', 'Trench Coat', 'Varsity Jacket', 'Windbreaker']
+    #data_listinsulation = ['Down', 'Polyester', 'Synthetic', 'Wool']
+
     for data in data_list:
-        code = '&Style=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        MensShortStyle.objects.create(name=data, code=code)
+        code = '&Lining%2520Material=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        JacketLining.objects.create(name=data, code=code)
         print(f'{data} added')
 
     print("all done")

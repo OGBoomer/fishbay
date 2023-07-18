@@ -150,6 +150,17 @@ class GenericMensShortForm(GenericMensPantForm):
     field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'style', 'closure', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
+class MensJacketForm(GenericMensTopForm):
+    jacket_type = EmptyChoiceField(choices=MensJacketType.objects.values_list('code', 'name'), required=False, label='Type')
+    shell = EmptyChoiceField(choices=JacketOuterShell.objects.values_list('code', 'name'), required=False)
+    lining = EmptyChoiceField(choices=JacketLining.objects.values_list('code', 'name'), required=False)
+    insulation = EmptyChoiceField(choices=JacketInsulation.objects.values_list('code', 'name'), required=False)
+    style = EmptyChoiceField(choices=MensJacketStyle.objects.values_list('code', 'name'), required=False)
+    closure = EmptyChoiceField(choices=MensJacketClosure.objects.values_list('code', 'name'), required=False)
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'jacket_type', 'style', 'shell', 'lining', 'insulation', 'closure', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
+
 class SizeUpdateForm(forms.Form):
     size = EmptyChoiceField(required=False)
 
@@ -160,7 +171,7 @@ class SizeUpdateForm(forms.Form):
 
 def get_size_qs_by_type(size_type, item_type):
     match item_type:
-        case 'GMT' | 'GMO':
+        case 'GMT' | 'GMO' | 'CJV':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case 'GMP' | 'GMS':
