@@ -85,6 +85,10 @@ class GenericMensTop(MensClothingItem):
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
 
 
+class MensActivewearTop(GenericMensTop):
+    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
 class GenericMensPolo(GenericMensTop):
     neckline = models.CharField(max_length=50, blank=True, null=True)
 

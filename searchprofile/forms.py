@@ -171,7 +171,7 @@ class SizeUpdateForm(forms.Form):
 
 def get_size_qs_by_type(size_type, item_type):
     match item_type:
-        case 'GMT' | 'GMO' | 'CJV':
+        case 'GMT' | 'GMO' | 'CJV' | 'MAT':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case 'GMP' | 'GMS':
