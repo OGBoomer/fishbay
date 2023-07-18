@@ -174,7 +174,7 @@ def get_size_qs_by_type(size_type, item_type):
         case 'GMT' | 'GMO' | 'CJV' | 'MAT':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
-        case 'GMP' | 'GMS':
+        case 'GMP' | 'GMS' | 'MAP':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = MensPantSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case _:

@@ -86,7 +86,7 @@ class GenericMensTop(MensClothingItem):
 
 
 class MensActivewearTop(GenericMensTop):
-    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
 
 
 class GenericMensPolo(GenericMensTop):
@@ -99,6 +99,10 @@ class GenericMensPant(MensClothingItem):
     rise = models.CharField(max_length=30, blank=True, null=True)
     closure = models.CharField(max_length=30, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
+class MensActivewearPant(GenericMensPant):
+    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
 
 
 class GenericMensShort(GenericMensPant):

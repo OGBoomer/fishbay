@@ -138,7 +138,7 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
     match item_type:
         case 'GMT' | 'MAT':
             form = GenericMensTopForm(data=field_data, profile=profile)
-        case 'GMP':
+        case 'GMP' | 'MAP':
             form = GenericMensPantForm(data=field_data, profile=profile)
         case 'GMO':
             form = GenericMensPoloForm(data=field_data, profile=profile)
@@ -246,7 +246,9 @@ def get_object_by_type(item_type, result):
         case 'CJV':
             item_object = GenericMensJacket.objects.create(result=result)
         case 'MAT':
-            item_object = GenericMensJacket.objects.create(result=result)
+            item_object = MensActivewearTop.objects.create(result=result)
+        case 'MAP':
+            item_object = MensActivewearPant.objects.create(result=result)
         case _:
             pass
     return item_object
