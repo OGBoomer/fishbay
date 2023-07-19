@@ -148,6 +148,8 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
             form = MensJacketForm(data=field_data, profile=profile)
         case 'MHS':
             form = MensHoodiesSweatshirtsForm(data=field_data, profile=profile)
+        case 'MDS':
+            form = MensDressShirtForm(data=field_data, profile=profile)
         case _:
             pass
     return form
@@ -253,6 +255,8 @@ def get_object_by_type(item_type, result):
             item_object = MensActivewearPant.objects.create(result=result)
         case 'MHS':
             item_object = MensHoodiesSweatshirts.objects.create(result=result)
+        case 'MDS':
+            item_object = MensDressShirt.objects.create(result=result)
         case _:
             pass
     return item_object
@@ -448,14 +452,16 @@ def jplay(request):
     # data_listjacketstyle = ['3-in-1 Jacket', 'Anorak', 'Biker', 'Bomber Jacket', 'Military Jacket', 'Motorcycle Jacket', 'Overcoat', 'Parka',
     #             'Pea Coat', 'Puffer Jacket', 'Quilted', 'Rain Coat', 'Trench Coat', 'Varsity Jacket', 'Windbreaker']
     # data_listinsulation = ['Down', 'Polyester', 'Synthetic', 'Wool']
-    data_list = ['1/2 Zip', '1/4 Zip', 'Adjustable', 'All Seasons', 'Belted', 'Breathable', 'Buckle', 'Collarless', 'Full Zip',
-                 'Graphic Print', 'Heavyweight', 'Hooded', 'Insulated', 'Lightweight', 'Lined', 'Moisture Wicking', 'Open', 'Oversized',
-                 'Pockets', 'Preshrunk', 'Reflective', 'Reversible', 'Ring Spun', 'Sheer', 'Shoulder Pads', 'Stretch', 'Tagless', 'Taped Seams',
-                 'Thermal', 'Waterproof', 'Water Resistant']
+    # data_list = ['1/2 Zip', '1/4 Zip', 'Adjustable', 'All Seasons', 'Belted', 'Breathable', 'Buckle', 'Collarless', 'Full Zip',
+    #             'Graphic Print', 'Heavyweight', 'Hooded', 'Insulated', 'Lightweight', 'Lined', 'Moisture Wicking', 'Open', 'Oversized',
+    #             'Pockets', 'Preshrunk', 'Reflective', 'Reversible', 'Ring Spun', 'Sheer', 'Shoulder Pads', 'Stretch', 'Tagless', 'Taped Seams',
+    #             'Thermal', 'Waterproof', 'Water Resistant']
+    data_list = ['14 in', '14.5 in', '15 in', '15.5 in', '16 in', '16.5 in', '17 in', '17.5 in', '18 in', '18.5 in', '19 in', '19.5 in',
+                 '20 in', '22 in', '22.5', '23 in']
 
     for data in data_list:
-        code = '&Features=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        GenericFeature.objects.create(name=data, code=code)
+        code = '&Neck%2520Size=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        MensShirtNecksize.objects.create(name=data, code=code)
         print(f'{data} added')
 
     print("all done")

@@ -97,6 +97,10 @@ class GenericMensPolo(GenericMensTop):
     neckline = models.CharField(max_length=50, blank=True, null=True)
 
 
+class MensDressShirt(GenericMensTop):
+    neck_size = models.CharField(max_length=50, blank=True, null=True)
+
+
 class GenericMensPant(MensClothingItem):
     waist_size = models.CharField(max_length=30, blank=True, null=True)
     inseam = models.CharField(max_length=30, blank=True, null=True)
