@@ -146,6 +146,8 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
             form = GenericMensShortForm(data=field_data, profile=profile)
         case 'CJV':
             form = MensJacketForm(data=field_data, profile=profile)
+        case 'MHS':
+            form = MensHoodiesSweatshirtsForm(data=field_data, profile=profile)
         case _:
             pass
     return form
@@ -249,6 +251,8 @@ def get_object_by_type(item_type, result):
             item_object = MensActivewearTop.objects.create(result=result)
         case 'MAP':
             item_object = MensActivewearPant.objects.create(result=result)
+        case 'MHS':
+            item_object = MensHoodiesSweatshirts.objects.create(result=result)
         case _:
             pass
     return item_object
@@ -423,11 +427,11 @@ def jplay(request):
     #              'Patent Leather', 'Polyamide', 'Polyester', 'Polyethylene', 'Polyimide', 'Polylactide', 'Polypropylene',
     #              'Polyurethane', 'PVC', 'Ramie', 'Silk', 'Spandex', 'Suede', 'Tweed', 'Twill', 'Velour', 'Velvet', 'Viscose',
     #              'Wool', 'Yak']
-    data_list = ['Acelate', 'Acrylic', 'Alpaca', 'Angora', 'Animal Hair', 'Bamboo', 'Camel',
-                 'Cashgora', 'Cashmere', 'Coir', 'Cotton', 'Cupro', 'Elastodiene', 'Faux Fur', 'Faux Leather', 'Flax',
-                 'Fur', 'Hemp', 'Leather', 'Linen', 'Llama', 'Lyocell', 'Modacrylic', 'Modal', 'Mohair', 'Nylon',
-                 'Patent Leather', 'Polyamide', 'Polyester', 'Polyethylene', 'Polyimide', 'Polylactide', 'Polypropylene',
-                 'Polyurethane', 'Ramie', 'Silk', 'Spandex', 'Suede', 'Tweed', 'Twill', 'Viscose', 'Wool', 'Yak']
+    # data_list = ['Acelate', 'Acrylic', 'Alpaca', 'Angora', 'Animal Hair', 'Bamboo', 'Camel',
+    #             'Cashgora', 'Cashmere', 'Coir', 'Cotton', 'Cupro', 'Elastodiene', 'Faux Fur', 'Faux Leather', 'Flax',
+    #             'Fur', 'Hemp', 'Leather', 'Linen', 'Llama', 'Lyocell', 'Modacrylic', 'Modal', 'Mohair', 'Nylon',
+    #             'Patent Leather', 'Polyamide', 'Polyester', 'Polyethylene', 'Polyimide', 'Polylactide', 'Polypropylene',
+    #             'Polyurethane', 'Ramie', 'Silk', 'Spandex', 'Suede', 'Tweed', 'Twill', 'Viscose', 'Wool', 'Yak']
     # data_listcolor = ['Beige', 'Black', 'Blue', 'Brown', 'Clear', 'Gold', 'Gray', 'Green', 'Ivory', 'Multicolor', 'Orange', 'Pink', 'Purple', 'Red', 'Silver', 'White', 'Yellow']
     # data_listcollar = ['Band', 'Button-Down', 'Cutaway', 'Point', 'Sailor', 'Spread', 'Stand-Up', 'Wing']
     # data_listfit = ['Athletic', 'Classic', 'Extra Slim', 'Regular', 'Relaxed', 'Slim']
@@ -443,11 +447,15 @@ def jplay(request):
     # data_listjackettype = ['Blazer', 'Cape', 'Coat', 'Coatigan', 'Jacket', 'Poncho', 'Vest']
     # data_listjacketstyle = ['3-in-1 Jacket', 'Anorak', 'Biker', 'Bomber Jacket', 'Military Jacket', 'Motorcycle Jacket', 'Overcoat', 'Parka',
     #             'Pea Coat', 'Puffer Jacket', 'Quilted', 'Rain Coat', 'Trench Coat', 'Varsity Jacket', 'Windbreaker']
-    #data_listinsulation = ['Down', 'Polyester', 'Synthetic', 'Wool']
+    # data_listinsulation = ['Down', 'Polyester', 'Synthetic', 'Wool']
+    data_list = ['1/2 Zip', '1/4 Zip', 'Adjustable', 'All Seasons', 'Belted', 'Breathable', 'Buckle', 'Collarless', 'Full Zip',
+                 'Graphic Print', 'Heavyweight', 'Hooded', 'Insulated', 'Lightweight', 'Lined', 'Moisture Wicking', 'Open', 'Oversized',
+                 'Pockets', 'Preshrunk', 'Reflective', 'Reversible', 'Ring Spun', 'Sheer', 'Shoulder Pads', 'Stretch', 'Tagless', 'Taped Seams',
+                 'Thermal', 'Waterproof', 'Water Resistant']
 
     for data in data_list:
-        code = '&Lining%2520Material=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        JacketLining.objects.create(name=data, code=code)
+        code = '&Features=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        GenericFeature.objects.create(name=data, code=code)
         print(f'{data} added')
 
     print("all done")

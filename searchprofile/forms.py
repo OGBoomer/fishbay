@@ -134,6 +134,12 @@ class GenericMensPoloForm(GenericMensTopForm):
     field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
+class MensHoodiesSweatshirtsForm(GenericMensTopForm):
+    feature = EmptyChoiceField(choices=GenericFeature.objects.values_list('code', 'name'), required=False)
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'neckline', 'feature', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
+
 class GenericMensPantForm(GenericMensClothingForm):
     waist_size = EmptyChoiceField(choices=MensPantWaistSize.objects.values_list('code', 'name'), required=False)
     inseam = EmptyChoiceField(choices=MensPantInseamSize.objects.values_list('code', 'name'), required=False)
@@ -158,7 +164,7 @@ class MensJacketForm(GenericMensTopForm):
     style = EmptyChoiceField(choices=MensJacketStyle.objects.values_list('code', 'name'), required=False)
     closure = EmptyChoiceField(choices=MensJacketClosure.objects.values_list('code', 'name'), required=False)
 
-    field_order = ['vintage', 'condition', 'size_type', 'size', 'jacket_type', 'style', 'shell', 'lining', 'insulation', 'closure', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'jacket_type', 'style', 'closure', 'pattern', 'shell', 'lining', 'insulation', 'material', 'fabric', 'color', 'item_model']
 
 
 class SizeUpdateForm(forms.Form):
@@ -171,7 +177,7 @@ class SizeUpdateForm(forms.Form):
 
 def get_size_qs_by_type(size_type, item_type):
     match item_type:
-        case 'GMT' | 'GMO' | 'CJV' | 'MAT':
+        case 'GMT' | 'GMO' | 'CJV' | 'MAT' | 'MHS':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case 'GMP' | 'GMS' | 'MAP':
