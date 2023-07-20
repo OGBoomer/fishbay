@@ -137,7 +137,7 @@ class GenericMensPoloForm(GenericMensTopForm):
 class MensDressShirtForm(GenericMensTopForm):
     neck_size = EmptyChoiceField(choices=MensShirtNecksize.objects.values_list('code', 'name'), required=False)
 
-    field_order = ['vintage', 'condition', 'size_type', 'size',  'neck_size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'neck_size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class MensHoodiesSweatshirtsForm(GenericMensTopForm):
@@ -183,7 +183,7 @@ class SizeUpdateForm(forms.Form):
 
 def get_size_qs_by_type(size_type, item_type):
     match item_type:
-        case 'GMT' | 'GMO' | 'CJV' | 'MAT' | 'MHS' | 'MDS':
+        case 'GMT' | 'GMO' | 'CJV' | 'MAT' | 'MHS' | 'MDS' | 'MTS' | 'MST':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case 'GMP' | 'GMS' | 'MAP':

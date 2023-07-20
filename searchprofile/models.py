@@ -89,6 +89,14 @@ class MensActivewearTop(GenericMensTop):
     place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
 
 
+class MensTShirt(GenericMensTop):
+    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
+
+
+class MensSweater(GenericMensTop):
+    place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
+
+
 class MensHoodiesSweatshirts(GenericMensTop):
     feature = models.CharField(max_length=30, blank=True, null=True)
 
