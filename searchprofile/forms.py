@@ -153,7 +153,7 @@ class GenericMensPantForm(GenericMensClothingForm):
     closure = EmptyChoiceField(choices=MensPantClosure.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
 
-    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'closure', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'inseam', 'closure', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class GenericMensShortForm(GenericMensPantForm):
@@ -186,7 +186,7 @@ def get_size_qs_by_type(size_type, item_type):
         case 'GMT' | 'GMO' | 'CJV' | 'MAT' | 'MHS' | 'MDS' | 'MTS' | 'MST':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = GenericSize.objects.filter(size_type=size_type).values_list('code', 'name')
-        case 'GMP' | 'GMS' | 'MAP':
+        case 'GMP' | 'GMS' | 'MAP' | 'MPT':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = MensPantSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case _:
