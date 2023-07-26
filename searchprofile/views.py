@@ -242,11 +242,14 @@ def create_item(form_data, result):
                             new_value += '-' + strip_codes(item_value)
                         value = new_value
                     else:
-                        value = strip_codes(value[0])
+                        if len(value) > 0:
+                            value = strip_codes(value[0])
+                        else:
+                            value = ''
                 else:
-                    print(f'error {key} {value}')
                     value = strip_codes(value)
-            data[key] = value
+            if value != '':
+                data[key] = value
     for attr, val in data.items():
         setattr(item, attr, val)
     item.save()
@@ -283,41 +286,33 @@ def get_object_by_type(item_type, result):
 
 
 def build_search_heading(form_data):
-    count = -1
-    result_heading = ''
+    result_heading = []
     keys_for_removal = ['keywords', 'profile_id', 'item_type']
     form_data = {key: value for key, value in form_data.items() if key not in keys_for_removal}
     for (key, value) in form_data.items():
         if value != '':
             if key == 'vintage':
                 if value is True:
-                    count += 1
-                    value = 'VTG'
-                else:
-                    value = ''
+                    result_heading.append('VTG')
             elif key == 'condition':
-                count += 1
-                value = list(Condition.objects.filter(code=value).values_list('name', flat=True))[0]
+                if value != '':
+                    result_heading.append(list(Condition.objects.filter(code=value).values_list('name', flat=True))[0])
             else:
                 new_value = value
-                count += 1
                 if isinstance(value, list):
+                    new_value = ''
                     if len(value) > 1:
                         new_value = strip_codes(value.pop(0))
                         for item in value:
                             new_value += '-' + strip_codes(item)
                     else:
-                        new_value = strip_codes(value[0])
-                    value = new_value
+                        if len(value) > 0:
+                            new_value = strip_codes(value[0])
+                    if new_value != '':
+                        result_heading.append(new_value)
                 else:
-                    print(f'test key {key}')
-                    value = strip_codes(value)
-            if count > 0:
-                heading_value = ' / ' + value
-            else:
-                heading_value = value
-            result_heading += heading_value
-    return result_heading
+                    result_heading.append(strip_codes(value))
+    return '/'.join(result_heading)
 
 
 def strip_codes(value):
@@ -346,9 +341,11 @@ def build_url_string(post_items, profile):
                         new_value += re.sub(r'^.*?=', '%7C', item)
                     url_string += new_value
                 else:
-                    url_string += value[0]
+                    if len(value) > 0:
+                        url_string += value[0]
             else:
-                url_string += value
+                if value != '':
+                    url_string += value
     return url_string
 
 

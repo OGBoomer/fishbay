@@ -110,7 +110,7 @@ class GenericMensClothingForm(forms.Form):
         })
         if 'size' in self.data:
             qs = get_size_qs_by_type(self.data['size_type'], self.data['item_type'])
-            self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1'}), choices=qs, initial=self.data['size'])
+            self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=qs, initial=self.data['size'])
         try:
             qs = ProfileModel.objects.filter(profile=self.profile).values_list('code', 'name')
         except ProfileModel.DoesNotExist:
@@ -147,8 +147,8 @@ class MensHoodiesSweatshirtsForm(GenericMensTopForm):
 
 
 class GenericMensPantForm(GenericMensClothingForm):
-    waist_size = EmptyChoiceField(choices=MensPantWaistSize.objects.values_list('code', 'name'), required=False)
-    inseam = EmptyChoiceField(choices=MensPantInseamSize.objects.values_list('code', 'name'), required=False)
+    waist_size = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=MensPantWaistSize.objects.values_list('code', 'name'), required=False)
+    inseam = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=MensPantInseamSize.objects.values_list('code', 'name'), required=False)
     rise = EmptyChoiceField(choices=MensPantRise.objects.values_list('code', 'name'), required=False)
     closure = EmptyChoiceField(choices=MensPantClosure.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
@@ -178,7 +178,7 @@ class SizeUpdateForm(forms.Form):
 
     def update_size(self, size_type, item_type):
         qs = get_size_qs_by_type(size_type, item_type)
-        self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize();', 'onBlur': 'shrinkSize();'}), choices=qs, required=False)
+        self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=qs, required=False)
 
 
 def get_size_qs_by_type(size_type, item_type):
