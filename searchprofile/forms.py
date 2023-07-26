@@ -87,7 +87,7 @@ class GenericMensClothingForm(forms.Form):
     size_type = EmptyChoiceField(choices=GenericSizeType.objects.values_list('code', 'name'), required=False)
     size = EmptyChoiceField(required=False)
     material = EmptyChoiceField(choices=Material.objects.values_list('code', 'name'), required=False)
-    pattern = EmptyChoiceField(choices=Pattern.objects.values_list('code', 'name'), required=False)
+    pattern = EmptyChoiceField(widget=forms.Select(attrs={'onFocus': 'changeSize();', 'onBlur': 'doBlue();'}), choices=Pattern.objects.values_list('code', 'name'), required=False)
     color = EmptyChoiceField(choices=Color.objects.values_list('code', 'name'), required=False)
     fit = EmptyChoiceField(choices=Fit.objects.values_list('code', 'name'), required=False)
     fabric = EmptyChoiceField(choices=MensGenericFabric.objects.values_list('code', 'name'), required=False)
@@ -110,7 +110,7 @@ class GenericMensClothingForm(forms.Form):
         })
         if 'size' in self.data:
             qs = get_size_qs_by_type(self.data['size_type'], self.data['item_type'])
-            self.fields['size'] = EmptyChoiceField(choices=qs, initial=self.data['size'])
+            self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1'}), choices=qs, initial=self.data['size'])
         try:
             qs = ProfileModel.objects.filter(profile=self.profile).values_list('code', 'name')
         except ProfileModel.DoesNotExist:
@@ -178,7 +178,7 @@ class SizeUpdateForm(forms.Form):
 
     def update_size(self, size_type, item_type):
         qs = get_size_qs_by_type(size_type, item_type)
-        self.fields['size'] = EmptyChoiceField(choices=qs, required=False)
+        self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize();', 'onBlur': 'shrinkSize();'}), choices=qs, required=False)
 
 
 def get_size_qs_by_type(size_type, item_type):

@@ -1,4 +1,5 @@
 
+/*
 $(document).ready(function(){
     $("#btnSearch").click(function(e){
         e.preventDefault()
@@ -42,7 +43,13 @@ $(document).on('show.bs.modal', '#confirmDelete', function(e){
     const myvar = $(e.relatedTarget).attr('data-bs-delete-url');
     $('#delete-button').attr('href', myvar);
 });
-
+*/
+$(document).ready(function(){
+    $("#id_size").focus(function(){
+        $(this).select();
+        $(this).css('background-color', 'yellow');
+    });
+});
 
 
 

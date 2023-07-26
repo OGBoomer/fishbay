@@ -11,6 +11,8 @@ from .forms import *
 import requests
 import json
 import string
+import re
+import copy
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from render_block import render_block_to_string
@@ -181,16 +183,19 @@ def create_search(request):
     profile = SearchProfile.objects.get(pk=request.POST['profile_id'])
     if request.method == 'POST':
         form = get_form_by_type(form_data=request.POST, profile=profile)
-        # form = GenericMensTopForm(request.POST, profile=profile)
-        url_string = build_url_string(request.POST.copy(), profile)
-        if url_string:
-            data = get_search_data(url_string)
-            heading = build_search_heading(request.POST.copy())
-            search_result = SearchResult.objects.create(profile=profile, forsale=data['forsale'], avg_forsale_price=data['avg_forsale_price'],
-                                                        sold=data['sold'], avg_sold_price=data['avg_sold_price'], ratio=data['ratio'],
-                                                        search_url=url_string, keywords=request.POST['keywords'], heading=heading)
-            create_item(request.POST.copy(), search_result)
-            triggers = '{"check_notice": "", "result_added": ""}'
+        if form.is_valid():
+            # form = GenericMensTopForm(request.POST, profile=profile)
+            url_string = build_url_string(copy.deepcopy(form.cleaned_data), profile)
+            if url_string:
+                data = get_search_data(url_string)
+                heading = build_search_heading(copy.deepcopy(form.cleaned_data))
+                search_result = SearchResult.objects.create(profile=profile, forsale=data['forsale'], avg_forsale_price=data['avg_forsale_price'],
+                                                            sold=data['sold'], avg_sold_price=data['avg_sold_price'], ratio=data['ratio'],
+                                                            search_url=url_string, keywords=request.POST['keywords'], heading=heading)
+                create_item(copy.deepcopy(form.cleaned_data), search_result)
+                triggers = '{"check_notice": "", "result_added": ""}'
+            else:
+                messages.info(request, 'Problem contact administrator')
         else:
             messages.info(request, 'Problem contact administrator')
     else:
@@ -211,7 +216,7 @@ def create_search(request):
 
 def create_brand(brand_name, user):
     code = "Brand={}".format(brand_name).replace(' ', '%2520').replace('&', '%26').replace('\'', '%2527')
-    keyword = brand_name.replace(' ', '+').replace('&', '%26')
+    keyword = brand_name.replace(' ', '+').replace('&', '%2526')
     new_brand = brand_name
     new_brand = Brand.objects.create(name=brand_name, code=code, keyword=keyword, user=user)
     return new_brand
@@ -220,6 +225,7 @@ def create_brand(brand_name, user):
 def create_item(form_data, result):
     data = {}
     form_data.pop('keywords', None)
+    form_data.pop('profile_id', None)
     vint = form_data.pop('vintage', None)
     if vint:
         data['vintage'] = 'Yes'
@@ -229,7 +235,17 @@ def create_item(form_data, result):
             if key == 'condition':
                 value = list(Condition.objects.filter(code=value).values_list('name', flat=True))[0]
             else:
-                value = value.partition('=')[2].replace('%2520', ' ').replace('%2527', '\'').replace('%2526', '&')
+                if isinstance(value, list):
+                    if len(value) > 1:
+                        new_value = strip_codes(value.pop(0))
+                        for item_value in value:
+                            new_value += '-' + strip_codes(item_value)
+                        value = new_value
+                    else:
+                        value = strip_codes(value[0])
+                else:
+                    print(f'error {key} {value}')
+                    value = strip_codes(value)
             data[key] = value
     for attr, val in data.items():
         setattr(item, attr, val)
@@ -271,18 +287,31 @@ def build_search_heading(form_data):
     result_heading = ''
     keys_for_removal = ['keywords', 'profile_id', 'item_type']
     form_data = {key: value for key, value in form_data.items() if key not in keys_for_removal}
-    if 'vintage' in form_data:
-        form_data.pop('vintage', None)
-        result_heading += 'VTG'
-        count += 1
     for (key, value) in form_data.items():
         if value != '':
-            if key == 'condition':
+            if key == 'vintage':
+                if value is True:
+                    count += 1
+                    value = 'VTG'
+                else:
+                    value = ''
+            elif key == 'condition':
                 count += 1
                 value = list(Condition.objects.filter(code=value).values_list('name', flat=True))[0]
             else:
+                new_value = value
                 count += 1
-                value = value.partition('=')[2].replace('%2520', ' ').replace('%2527', '\'').replace('%2526', '&').replace('%252D', '-')
+                if isinstance(value, list):
+                    if len(value) > 1:
+                        new_value = strip_codes(value.pop(0))
+                        for item in value:
+                            new_value += '-' + strip_codes(item)
+                    else:
+                        new_value = strip_codes(value[0])
+                    value = new_value
+                else:
+                    print(f'test key {key}')
+                    value = strip_codes(value)
             if count > 0:
                 heading_value = ' / ' + value
             else:
@@ -291,18 +320,35 @@ def build_search_heading(form_data):
     return result_heading
 
 
+def strip_codes(value):
+    value = value.partition('=')[2].replace('%2520', ' ').replace('%2527', '\'').replace('%2526', '&').replace('%252D', '-')
+    return value
+
+
 def build_url_string(post_items, profile):
+    print(f'post items is {post_items}')
     post_items.pop('profile_id', None)
     post_items.pop('item_type', None)
     url_string = f'https://www.ebay.com/sch/{profile.category.code}/i.html?{profile.brand.code}&_dcat={profile.category.code}&LH_BIN=1&_ipg=240&LH_PrefLoc=1'
     for key, value in post_items.items():
-        print(key)
-        if key == 'vintage':
-            url_string += '&Vintage=Yes'
-        elif key == 'keywords':
-            url_string += '&_nkw=' + value
-        else:
-            url_string += value
+        if value != '':
+            if key == 'vintage':
+                if value is True:
+                    url_string += '&Vintage=Yes'
+                else:
+                    value = ''
+            elif key == 'keywords':
+                url_string += '&_nkw=' + value
+            elif isinstance(value, list):
+                if len(value) > 1:
+                    new_value = value.pop(0)
+                    for item in value:
+                        new_value += re.sub(r'^.*?=', '%7C', item)
+                    url_string += new_value
+                else:
+                    url_string += value[0]
+            else:
+                url_string += value
     return url_string
 
 
