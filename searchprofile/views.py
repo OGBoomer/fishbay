@@ -30,6 +30,7 @@ def profile_list(request):
                 brand = Brand.objects.get(pk=cd['brand'])
             try:
                 SearchProfile.objects.create(category=cd['category'], brand=brand, user=request.user)
+                request.session['notice'] = 'Profile Added1'
                 triggers = '{"check_notice": "", "profile_added": ""}'
             except IntegrityError as e:
                 request.session['notice'] = 'Profile already exists.'
@@ -81,11 +82,11 @@ def update_profile_list(request):
     context = {'profiles': SearchProfile.objects.filter(brand__name__istartswith=filter_text, user=request.user,)}
     html = render_block_to_string('searchprofile/profilelist.html', 'profile-list', context)
     response = HttpResponse(html)
-    if filter_text == '':
-        request.session['notice'] = 'Profile created.'
+    if request.session['notice'] == 'Profile Added1':
+        request.session['notice'] = 'Profile Added'
+        response['HX-Trigger'] = 'check_notice'
     else:
         request.session['notice'] = ''
-    response['HX-Trigger'] = 'check_notice'
     return response
 
 
