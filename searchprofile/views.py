@@ -45,7 +45,7 @@ def profile_list(request):
         print('oops')
         context = {
             'form': CreateProfileForm(user=request.user),
-            'profiles': SearchProfile.objects.filter(user=request.user)
+            'profiles': SearchProfile.objects.filter(brand__name__istartswith='', user=request.user,)
         }
     return render(request, 'searchprofile/profilelist.html', context)
 
@@ -74,10 +74,17 @@ def brand_list(request):
 
 
 def update_profile_list(request):
-    request.session['notice'] = 'Profile created.'
-    context = {'profiles': SearchProfile.objects.filter(user=request.user)}
+    if request.method == 'POST':
+        filter_text = request.POST['filter_text']
+    else:
+        filter_text = ''
+    context = {'profiles': SearchProfile.objects.filter(brand__name__istartswith=filter_text, user=request.user,)}
     html = render_block_to_string('searchprofile/profilelist.html', 'profile-list', context)
     response = HttpResponse(html)
+    if filter_text == '':
+        request.session['notice'] = 'Profile created.'
+    else:
+        request.session['notice'] = ''
     response['HX-Trigger'] = 'check_notice'
     return response
 

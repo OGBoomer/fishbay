@@ -16,7 +16,7 @@
 	}
 	function shrinkSize(event){
 		var el = event.currentTarget
-		$(el).attr("size", "1");
+		$(el).attr("size", "4");
 	}
 </script>
 <div class='container d-flex justify-content-center' id='form-container'>
@@ -87,10 +87,10 @@
 </div>
 {% endblock %}
 <div class='container d-flex justify-content-center' id='search-container' 
-																													hx-trigger='result_added from:body'
-													 																hx-get="{% url 'searchprofile:update_result_list' profile.pk %}"
-													 																hx-target='#results-container'
-													 																hx-swap='outerHTML'>
+													hx-trigger='result_added from:body'
+													hx-get="{% url 'searchprofile:update_result_list' profile.pk %}"
+													hx-target='#results-container'
+													hx-swap='outerHTML'>
 	<div class="card mt-5 w-100">
 		<div class="card-body">
 			<div id='notice-block'>
@@ -101,15 +101,13 @@
 						</div>
 					{% endif %}
 				{% endblock %}
-				<div id='tester2'>
-				</div>
 			</div>
 			{% block result-list %}
 			<div class='d-flex justify-content-center flex-wrap' id='results-container'
-																													hx-trigger='check_notice from:body'
-							 																						hx-get="{% url 'searchprofile:check_notice' %}"
-							 																						hx-target='#notice-block'
-							 																						hx-swap='innerHTML'>
+													hx-trigger='check_notice from:body'
+							 						hx-get="{% url 'searchprofile:check_notice' %}"
+							 						hx-target='#notice-block'
+							 						hx-swap='innerHTML'>
 																													
 				{% if results.count > 0 %}
 					{% for result in results %}
