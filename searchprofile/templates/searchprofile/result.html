@@ -10,23 +10,27 @@
 		<p class='card-text'>Sold: {{ result.sold }}  Avg-Price: ${{ result.avg_sold_price|floatformat:"2g" }}</p>
 		<p class='card-text text-left'>Last Updated: {{ result.last_updated }}</p>
 	</div>
-	<div class='card-footer bg-primary text-white'>
-		<button class="btn btn-primary btnUpdate" 
-							hx-trigger='click'
-							hx-get="{% url 'searchprofile:update_search' result.pk %}"
-							hx-target='#result{{ result.pk }}'
-							hx-swap='outerHTML'
-							hx-indicator='#spinner'>
-							Update
+	<div class='card-footer bg-primary'>
+		<button class="btn tt text-white" title='Refresh with current results for these specifics' 
+					hx-trigger='click'
+					hx-get="{% url 'searchprofile:update_search' result.pk %}"
+					hx-target='#result{{ result.pk }}'
+					hx-swap='outerHTML'
+					hx-indicator='#spinner'>
+					<i class="fa-solid fa-rotate"></i>
 		</button>
-		<button class='btn btn-primary' hx-trigger='click'
-							hx-get="{% url 'searchprofile:delete_search' result.pk %}"
-							hx-target='#result{{ result.pk }}'
-							hx-swap='delete'
-							hx-confirm='Please confirm you wish to delete.'
-							hx-indicator='#spinner'>
-							Delete
+		<button class='btn tt text-white' title='Delete this search' 
+					hx-trigger='click'
+					hx-get="{% url 'searchprofile:delete_search' result.pk %}"
+					hx-target='#result{{ result.pk }}'
+					hx-swap='delete'
+					hx-confirm='Please confirm you wish to delete.'
+					hx-indicator='#spinner'>
+					<i class="fa-solid fa-trash-can fa-xl"></i>
 		</button>
+			<a href='{{ result.search_url }}' target='_blank' class='btn text-white tt' title='See search on Ebay page'>
+				<i class="fa-brands fa-ebay fa-2xl"></i>
+			</a>
 	</div>
 </div>
 {% endblock %}
