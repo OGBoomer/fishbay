@@ -1,10 +1,8 @@
 {% block result-item %}
 <div class='card' id='result{{ result.pk }}'>
 	<div class='card-header text-center text-white bg-primary lh-sm'>
-		{% for item_details in result.item.all %}
-			{{ item_details.heading }}
-				<div class='text-center fst-italic'>{{ item_details.keywords|default_if_none:"" }}</div>
-		{% endfor %}
+		{{result.heading }}
+		<div class='text-center fst-italic'>{{ result.keywords|default_if_none:"" }}</div>
 	</div>
 	<div class='card-body text-center text-dark bg-info'>
 		<p class='card-text'>Sale through ratio: {{ result.ratio }}</p>

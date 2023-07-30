@@ -377,6 +377,7 @@ def update_search(request, search_id):
     context = {
         'result': search_result
     }
+    print(context['result'].heading)
     request.session['notice'] = 'Search updated.'
     html = render_block_to_string('searchprofile/result.html', 'result-item', context)
     response = HttpResponse(html)
