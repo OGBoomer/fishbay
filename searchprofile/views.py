@@ -512,13 +512,13 @@ def jplay(request):
     #             'Graphic Print', 'Heavyweight', 'Hooded', 'Insulated', 'Lightweight', 'Lined', 'Moisture Wicking', 'Open', 'Oversized',
     #             'Pockets', 'Preshrunk', 'Reflective', 'Reversible', 'Ring Spun', 'Sheer', 'Shoulder Pads', 'Stretch', 'Tagless', 'Taped Seams',
     #             'Thermal', 'Waterproof', 'Water Resistant']
-    data_list = ['14 in', '14.5 in', '15 in', '15.5 in', '16 in', '16.5 in', '17 in', '17.5 in', '18 in', '18.5 in', '19 in', '19.5 in',
-                 '20 in', '22 in', '22.5', '23 in']
+    # data_list = ['14 in', '14.5 in', '15 in', '15.5 in', '16 in', '16.5 in', '17 in', '17.5 in', '18 in', '18.5 in', '19 in', '19.5 in',
+    #              '20 in', '22 in', '22.5', '23 in']
 
-    for data in data_list:
-        code = '&Neck%2520Size=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        MensShirtNecksize.objects.create(name=data, code=code)
-        print(f'{data} added')
+    # for data in data_list:
+    #     code = '&Neck%2520Size=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+    #     MensShirtNecksize.objects.create(name=data, code=code)
+    #     print(f'{data} added')
 
     print("all done")
 

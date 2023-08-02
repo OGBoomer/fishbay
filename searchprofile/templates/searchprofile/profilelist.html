@@ -1,20 +1,9 @@
+{% extends 'index.htmx' %}
+
 {% block content %}
 {% block profile-form %}
 <!-- check if browser reload button was used, if so then redirect to home page -->
-<script>
-	window.onload = function(){
-		const id = document.getElementById('top-page');
-		if (id != null) {
-			alert('not null'); // should never fire as only fragment is loaded via htmx not document
-		} else {
-			window.location.replace("http://127.0.0.1:8000/");
-		}
-	}
-	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  		return new bootstrap.Tooltip(tooltipTriggerEl)
-	})
-</script>
+
 <div class='container d-flex justify-content-center' id='form-container'>
 	<div class="card mt-5 w-100">
 		<div class="card-body">

@@ -1,4 +1,16 @@
+
 {% block content %}
+	<script>
+		window.onload = function(){
+			const id = document.getElementById('top-page');
+			if (id != null) {
+				alert('not null'); // should never fire as only fragment is loaded via htmx not document
+			} else {
+				window.location.replace("http://127.0.0.1:8000/");
+			}
+		
+		}
+	</script>
 	<div class='row'>
 		<div class='col text-center'>
 			<h5>{{ brand.name }}</h5>
@@ -7,7 +19,7 @@
 	{% for profile in profiles %}
 	<div class='row'>
 		<div class='col-10 d-flex flex-nowrap'>
-			<div class='text-dark'>
+			<div class='text-dark ml-2'>
 				{{ profile.category }}
 			</div>
 			<div>
@@ -22,8 +34,8 @@
 			</div>
 		</div>
 	</div>
-	<div class='row mb-4 justify-content-center'>
-		<div class='col-10 bg-info text-dark'>
+	<div class='row justify-content-center'>
+		<div class='col-11 bg-info text-dark'>
 			{% if profile.results.count > 0 %}
 				{% for result in profile.results.all %}
 						<div class='row d-flex'>
