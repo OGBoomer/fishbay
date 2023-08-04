@@ -91,8 +91,12 @@ def update_profile_list(request):
 
 
 def update_brand_list(request):
+    if request.method == 'POST':
+        filter_text = request.POST['filter_text']
+    else:
+        filter_text = ''
     request.session['notice'] = 'Brand created.'
-    context = {'brands': Brand.objects.filter(user=request.user)}
+    context = {'brands': Brand.objects.filter(name__istartswith=filter_text, user=request.user)}
     html = render_block_to_string('searchprofile/brandlist.html', 'brand-list', context)
     response = HttpResponse(html)
     response['HX-Trigger'] = 'check_notice'

@@ -1,9 +1,22 @@
-body,
+body {
+    margin: 0;
+    padding-top: 75px;
+    height: 100%;
+    background: #7abecc !important;
+}
+
+
 html {
     margin: 0;
     padding: 0;
     height: 100%;
     background: #7abecc !important;
+}
+
+.fishbay-top-header {
+    font-size: 3rem;
+    font-weight: bold;
+    color: black;
 }
 
 .fishbay-card {

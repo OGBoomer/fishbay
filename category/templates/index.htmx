@@ -29,8 +29,8 @@
     
     <div id="maincontent" class='flex-grow-1'>
       <div class='d-flex-column'>
-        <div id='topbar' class='d-flex justify-content-center p-3 topbar bg-white mb-4 static-top shadow'>
-            <nav class='navbar navbar-expand-lg navbar-light bg-light'>
+        <div id='topbar' class='d-flex justify-content-left bg-white mb-4 border-4'>
+            <nav class='navbar fixed-top navbar-expand navbar-light'>
                 <div class='container-fluid'>
                     <a class="navbar-brand" href='#'>
                     <i class="fas fa-fish-fins mr-3"></i>Myfishbay</a>
@@ -50,16 +50,17 @@
                             <li class='nav-item'>
                                 <a class='nav-link' href="#">Account</a>
                             </li>
+                            <li>
+                                {% if request.user.is_authenticated %}
+                                    <a class='nav-link' href="{% url 'account:logoutpage' %}">Logout</a>
+                                {% else %}
+                                    <a class='nav-link' href="{% url 'account:loginpage' %}">Login</a>
+                                {% endif %}
+                            </li> 
                         </ul>
                     </div>
                 </div>
             </nav>
-            {% if request.user.is_authenticated %}
-                <div class='m-2'><a href="{% url 'account:logoutpage' %}">Logout</a></div>
-            {% else %}
-                <div class='m-2'><a href="{% url 'account:loginpage' %}">Login</a></div>
-            {% endif %}
-            <i class="fa-solid fa-anchor p-2"></i>
         </div>
         <div id='newcontent'>
             {% block content %}
@@ -75,10 +76,4 @@
     <!-- <script src="{% static 'js/fishbay/htmx.min.js' %}"></script> -->
     <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
     <!-- <script src="https://unpkg.com/htmx.org/dist/ext/debug.js"></script> -->
-    <script>
-    const tooltips = document.querySelectorAll('.tt')
-    tooltips.forEach(t => {
-        new bootstrap.Tooltip(t)
-    })
-    </script>
 </body>

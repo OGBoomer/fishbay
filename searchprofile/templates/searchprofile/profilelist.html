@@ -68,7 +68,7 @@
 						<span class='mr-2'>Filter</span>
 							<form>
 								<input type='text' name='filter_text', 
-													hx-trigger='keyup delay:1s' 
+													hx-trigger='keyup delay:750ms' 
 													hx-post="{% url 'searchprofile:update_profile_list' %}"
 													hx-target='#profile_list'
 													hx-swap='innerHTML'>
