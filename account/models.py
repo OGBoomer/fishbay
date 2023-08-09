@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.conf import settings
 
 
 class MyAccountManager(BaseUserManager):
@@ -54,3 +55,9 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class AccountPayment(models.Model):
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    payment_bool = models.BooleanField(default=False)
+    stripe_checkout_id = models.CharField(max_length=500)
