@@ -65,17 +65,18 @@ def subscription_page(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     if request.method == 'POST':
         checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
             line_items=[
                 {
                     'price': settings.PRODUCT_PRICE,
                     'quantity': 1
                 },
             ],
-            mode='payment',
-            customer_creation='always',
-            success_url=settings.REDIRECT_DOMAIN + '/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=settings.REDIRECT_DOMAIN + '/payment_cancelled',
+            mode='subscription',
+            # subscription_data={
+            #     'trial_period_days': 7
+            # },
+            success_url=settings.REDIRECT_DOMAIN + '/account/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=settings.REDIRECT_DOMAIN + '/account/payment_cancelled',
         )
         return redirect(checkout_session.url, code=303)
     return render(request, 'account/subscription_page.html')
