@@ -87,6 +87,7 @@ def payment_successful(request):
     checkout_session_id = request.GET.get('session_id', None)
     session = stripe.checkout.Session.retrieve(checkout_session_id)
     customer = stripe.Customer.retrieve(session.customer)
+    print(f'payment id {{session}}')
     # user_id = request.user.user_id
     # user_payment = AccountPayment.objects.get(api_user=user_id)
     # user_payment.stripe.checkout_id = checkout_session_id
@@ -123,9 +124,10 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.complete':
         session = event['data']['object']
         session_id = session.get('id', None)
-        time.sleep(15)
-        account_payment = AccountPayment.objects.get(stripe_checkout_id=session_id)
-        line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
-        account_payment.payment_bool = True
-        account_payment.save()
+        print(f'wh id is {{ session_id }}')
+        # time.sleep(15)
+        # account_payment = AccountPayment.objects.get(stripe_checkout_id=session_id)
+        # line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
+        # account_payment.payment_bool = True
+        # account_payment.save()
     return HttpResponse(status=200)
