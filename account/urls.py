@@ -13,6 +13,7 @@ urlpatterns = [
     path('payment_successful/', views.payment_successful, name='payment_successful'),
     path('payment_cancelled/', views.payment_cancelled, name='payment_cancelled'),
     path('stripe_webhook/', views.stripe_webhook, name='stripe_webhook'),
+    path('webhook_test/', views.webhook_test, name='webhook_test'),
 
     # path("reset_password/", auth_views.PasswordResetView.as_view(), name='reset_password'),
     # path("reset_password_sent/", auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

@@ -87,15 +87,21 @@ def payment_successful(request):
     checkout_session_id = request.GET.get('session_id', None)
     session = stripe.checkout.Session.retrieve(checkout_session_id)
     customer = stripe.Customer.retrieve(session.customer)
-    user_id = request.user.user_id
-    user_payment = AccountPayment.objects.get(api_user=user_id)
-    user_payment.stripe.checkout_id = checkout_session_id
-    user_payment.save()
+    # user_id = request.user.user_id
+    # user_payment = AccountPayment.objects.get(api_user=user_id)
+    # user_payment.stripe.checkout_id = checkout_session_id
+    # user_payment.save()
     return render(request, 'account/payment_successful.html', {'customer': customer})
 
 
 def payment_cancelled(request):
     return render(request, 'account/payment_cancelled.html')
+
+
+@csrf_exempt
+def webhook_test(request):
+    print(request.body)
+    return HttpResponse(status=200)
 
 
 @csrf_exempt
