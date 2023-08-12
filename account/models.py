@@ -41,7 +41,6 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
@@ -56,8 +55,15 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+class AccountProfile(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+    stripe_cus_id = models.CharField(max_length=500, blank=True)
 
-class AccountPayment(models.Model):
-    account = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.user
+
+
+class StripePayment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment_bool = models.BooleanField(default=False)
     stripe_checkout_id = models.CharField(max_length=500)

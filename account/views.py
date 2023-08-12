@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import stripe
 import time
-from .models import AccountPayment
+from .models import AccountProfile, StripePayment
 
 # from django.contrib.auth import get_user_model
 
@@ -64,7 +64,13 @@ def homepage(request):
 def subscription_page(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     if request.method == 'POST':
+        account_profile = AccountProfile.objects.get(user=request.user)
+        if account_profile.stripe_cus_id:
+            customer_id = account_profile.stripe_cus_id
+        else:
+            customer_id = None
         checkout_session = stripe.checkout.Session.create(
+            customer = customer_id,
             line_items=[
                 {
                     'price': settings.PRODUCT_PRICE,
@@ -85,13 +91,13 @@ def subscription_page(request):
 def payment_successful(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     checkout_session_id = request.GET.get('session_id', None)
-    session = stripe.checkout.Session.retrieve(checkout_session_id)
-    customer = stripe.Customer.retrieve(session.customer)
-    print(f'payment id {{session}}')
-    # user_id = request.user.user_id
-    # user_payment = AccountPayment.objects.get(api_user=user_id)
-    # user_payment.stripe.checkout_id = checkout_session_id
-    # user_payment.save()
+    if checkout_session_id:
+        session = stripe.checkout.Session.retrieve(checkout_session_id)
+        customer = stripe.Customer.retrieve(session.customer)
+        account_profile = AccountProfile.objects.get(user=request.user)
+        account_profile.stripe_cus_id = customer.id
+        account_profile.save()
+        StripePayment.objects.create(user=request.user, stripe_checkout_id=checkout_session_id)
     return render(request, 'account/payment_successful.html', {'customer': customer})
 
 
@@ -104,7 +110,6 @@ def webhook_test(request):
     print(request.body)
     return HttpResponse(status=200)
 
-
 @csrf_exempt
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
@@ -112,6 +117,7 @@ def stripe_webhook(request):
     payload = request.body
     signature_header = request.META['HTTP_STRIPE_SIGNATURE']
     event = None
+    print(f'payload is {payload}')
     try:
         event = stripe.Webhook.construct_event(
             payload, signature_header, settings.STRIPE_WEBHOOK_SECRET_TEST

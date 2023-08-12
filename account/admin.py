@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import Account
+from .models import Account, AccountProfile, StripePayment
 
 
 class UserCreationForm(forms.ModelForm):
@@ -64,4 +64,6 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(Account, UserAdmin)
+admin.site.register(AccountProfile)
+admin.site.register(StripePayment)
 admin.site.unregister(Group)
