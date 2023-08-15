@@ -55,15 +55,27 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
 class AccountProfile(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True, on_delete=models.CASCADE)
+    class AccountStatus(models.TextChoices):
+        ACTIVE = "AT", "Active"
+        INACTIVE = "IA", "Inactive"
+        TRIAL = "TL", "Trial"
+        BETA = "BT", "Beta Tester"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_cus_id = models.CharField(max_length=500, blank=True)
+    stripe_sub_id = models.CharField(max_length=500, blank=True)
+    sub_start = models.DateTimeField(blank=True, null=True)
+    sub_expire = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=2, choices=AccountStatus.choices, default=AccountStatus.INACTIVE)
 
     def __str__(self):
-        return self.user
+        return self.user.email
 
 
 class StripePayment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     payment_bool = models.BooleanField(default=False)
     stripe_checkout_id = models.CharField(max_length=500)
+    stripe_sub_id = models.CharField(max_length=500, blank=True)
