@@ -67,12 +67,15 @@ def homepage(request):
 def subscription_page(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     if request.method == 'POST':
-        account_profile = AccountProfile.objects.get(user=request.user)
+        account_profile, created = AccountProfile.objects.get_or_create(user=request.user)
         customer_id = account_profile.stripe_cus_id
+        customer_email = None
         if not customer_id:
             customer_id = None
+            customer_email = request.user.email
         checkout_session = stripe.checkout.Session.create(
             customer=customer_id,
+            customer_email = customer_email,
             line_items=[
                 {
                     'price': settings.PRODUCT_PRICE,
@@ -106,7 +109,10 @@ def payment_successful(request):
         account_profile = AccountProfile.objects.get(user=request.user)
         account_profile.stripe_cus_id = customer.id
         account_profile.save()
-        StripePayment.objects.create(user=request.user, stripe_checkout_id=checkout_session_id)
+        print(f'account p = {account_profile}')
+        profile=AccountProfile.objects.get(user=request.user)
+        print(f'profile is {profile}')
+        StripePayment.objects.create(user=profile, stripe_checkout_id=checkout_session_id)
     return render(request, 'account/payment_successful.html', {'customer': customer})
 
 

@@ -79,3 +79,4 @@ class StripePayment(models.Model):
     payment_bool = models.BooleanField(default=False)
     stripe_checkout_id = models.CharField(max_length=500)
     stripe_sub_id = models.CharField(max_length=500, blank=True)
+    # user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='doomed', blank=True)
