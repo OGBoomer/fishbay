@@ -66,8 +66,8 @@ class AccountProfile(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_cus_id = models.CharField(max_length=500, blank=True)
     stripe_sub_id = models.CharField(max_length=500, blank=True)
-    sub_start = models.DateTimeField(blank=True, null=True)
-    sub_expire = models.DateTimeField(blank=True, null=True)
+    sub_start = models.DateField(blank=True, null=True)
+    sub_expire = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=2, choices=AccountStatus.choices, default=AccountStatus.INACTIVE)
 
     def __str__(self):

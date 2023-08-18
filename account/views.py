@@ -130,6 +130,7 @@ def webhook_test(request):
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    print(f'sigheader is {sig_header}')
     event = None
     payload = request.body
     try:
@@ -148,9 +149,13 @@ def stripe_webhook(request):
         print(subscription)
         # account_profile = AccountProfile.objects.get(stripe_cus_id=subscription.customer)
         account_profile = get_or_none(AccountProfile, stripe_cus_id=subscription.customer)
+        print(f'sub is {subscription.id}')
         if account_profile:
-            account_profile.sub_start_date = datetime.fromtimestamp(event.current_period_start)
-            account_profile.sub_end_date = datetime.fromtimestamp(event.current_period_end)
+            print('in profile')
+            account_profile.stripe_sub_id = subscription.id
+            account_profile.sub_start = datetime.date.fromtimestamp(subscription.current_period_start)
+            account_profile.sub_expire = datetime.date.fromtimestamp(subscription.current_period_end)
+            account_profile.status = 'BT'
             account_profile.save()
         #stripe_payment = StripePayment.objects.get(stripe_checkout_id=session_id)
         #line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
