@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .admin import UserCreationForm
-from .forms import LoginForm
+from .forms import AccountCreationForm
+# from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
@@ -11,7 +11,7 @@ import stripe
 import datetime
 import time
 import json
-from .models import AccountProfile, StripePayment
+from .models import StripePayment
 
 # from django.contrib.auth import get_user_model
 
@@ -23,9 +23,9 @@ def loginpage(request):
     if request.user.is_authenticated:
         return redirect('account:homepage')
     if request.method == 'POST':
-        username = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        email = request.POST.get('email')
+        user = authenticate(request, email=email, password=password)
         print('in login')
         if user is not None:
             print('user not none')
@@ -40,23 +40,19 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('account:homepage')
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        print("before valid")
+        form = AccountCreationForm(request.POST)
         if form.is_valid():
-            print('before save')
             form.save()
             return render(request, 'account/login.html')
         else:
             print("not valid")
     else:
-        form = UserCreationForm()
+        form = AccountCreationForm()
     return render(request, 'account/register.html', {'form': form})
 
 
 def logoutpage(request):
-    print('before')
     logout(request)
-    print("after")
     return redirect('account:loginpage')
 
 
@@ -75,7 +71,7 @@ def subscription_page(request):
             customer_email = request.user.email
         checkout_session = stripe.checkout.Session.create(
             customer=customer_id,
-            customer_email = customer_email,
+            customer_email=customer_email,
             line_items=[
                 {
                     'price': settings.PRODUCT_PRICE,
@@ -110,7 +106,7 @@ def payment_successful(request):
         account_profile.stripe_cus_id = customer.id
         account_profile.save()
         print(f'account p = {account_profile}')
-        profile=AccountProfile.objects.get(user=request.user)
+        profile = AccountProfile.objects.get(user=request.user)
         print(f'profile is {profile}')
         StripePayment.objects.create(user=profile, stripe_checkout_id=checkout_session_id)
     return render(request, 'account/payment_successful.html', {'customer': customer})

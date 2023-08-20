@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-
-from .models import Account, AccountProfile, StripePayment
+from .forms import AccountCreationForm, AccountChangeForm
+from .models import Account, StripePayment
 
 
 class UserCreationForm(forms.ModelForm):
@@ -14,7 +14,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('email', 'username')
+        fields = ('email',)
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -38,32 +38,49 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ('username', 'password', 'is_active', 'is_admin')
+        fields = ('password', 'is_active', 'is_admin')
 
 
-class UserAdmin(BaseUserAdmin):
-    form = UserChangeForm
-    add_form = UserCreationForm
+class AccountAdmin(UserAdmin):
+    form = AccountChangeForm
+    add_form = AccountCreationForm
+    model = Account
 
-    list_display = ('username', 'is_admin', 'date_joined')
-    list_filter = ('is_admin',)
+    list_display = ('email', 'is_staff', 'is_active',)
+    list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Permissions', {'fields': ('is_admin',)}),
+        (None, {
+            'fields':
+                ('email', 'password')
+        }),
+        ('Permissions', {
+            'fields':
+                ('is_staff', 'is_active')
+        }),
+        ('Myfishbay Fields', {
+            'fields':
+                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire')
+        }),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2')
+        }),
+        ('Permissions', {
+            'fields':
+                ('is_staff', 'is_active')
+        }),
+        ('Myfishbay Fields', {
+            'fields':
+                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire')
         }),
     )
     search_fields = ('email',)
     ordering = ('email',)
-    filter_horizontal = ()
 
 
-admin.site.register(Account, UserAdmin)
-admin.site.register(AccountProfile)
+admin.site.register(Account, AccountAdmin)
 admin.site.register(StripePayment)
 admin.site.unregister(Group)
