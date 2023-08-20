@@ -102,13 +102,9 @@ def payment_successful(request):
     if checkout_session_id:
         session = stripe.checkout.Session.retrieve(checkout_session_id)
         customer = stripe.Customer.retrieve(session.customer)
-        account_profile = AccountProfile.objects.get(user=request.user)
-        account_profile.stripe_cus_id = customer.id
-        account_profile.save()
-        print(f'account p = {account_profile}')
-        profile = AccountProfile.objects.get(user=request.user)
-        print(f'profile is {profile}')
-        StripePayment.objects.create(user=profile, stripe_checkout_id=checkout_session_id)
+        request.user.stripe_cus_id = customer.id
+        request.user.save()
+        StripePayment.objects.create(user=request.user, stripe_checkout_id=checkout_session_id)
     return render(request, 'account/payment_successful.html', {'customer': customer})
 
 
@@ -126,7 +122,6 @@ def webhook_test(request):
 def stripe_webhook(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    print(f'sigheader is {sig_header}')
     event = None
     payload = request.body
     try:
@@ -143,16 +138,14 @@ def stripe_webhook(request):
         print("in sub")
         subscription = event.data.object
         print(subscription)
-        # account_profile = AccountProfile.objects.get(stripe_cus_id=subscription.customer)
-        account_profile = get_or_none(AccountProfile, stripe_cus_id=subscription.customer)
+        customer = stripe.Customer.retrieve(subscription.customer)
+        user = Account.objects.get(email=customer.email)
         print(f'sub is {subscription.id}')
-        if account_profile:
-            print('in profile')
-            account_profile.stripe_sub_id = subscription.id
-            account_profile.sub_start = datetime.date.fromtimestamp(subscription.current_period_start)
-            account_profile.sub_expire = datetime.date.fromtimestamp(subscription.current_period_end)
-            account_profile.status = 'BT'
-            account_profile.save()
+        user.stripe_sub_id = subscription.id
+        user.sub_start = datetime.date.fromtimestamp(subscription.current_period_start)
+        user.sub_expire = datetime.date.fromtimestamp(subscription.current_period_end)
+        user.status = 'BT'
+        user.save()
         #stripe_payment = StripePayment.objects.get(stripe_checkout_id=session_id)
         #line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
         #stripe_payment.payment_bool = True
