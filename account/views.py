@@ -56,6 +56,11 @@ def logoutpage(request):
     return redirect('account:loginpage')
 
 
+def profile(request):
+    print('in profile')
+    return render(request, 'account/profile.html')
+
+
 def homepage(request):
     return render(request, 'account/home.html')
 
@@ -150,8 +155,7 @@ def stripe_webhook(request):
         #line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
         #stripe_payment.payment_bool = True
         # stripe_payment.save()
-        else:
-            print(subscription.customer)
+        print(subscription.customer)
     else:
         print(event.type)
         print('no sub')

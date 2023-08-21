@@ -21,8 +21,8 @@ from account.forms import FishbaySetPasswordForm as custom_form
 urlpatterns = [
     path('category/', include('category.urls', namespace='category')),
     path('search/', include('searchprofile.urls', namespace='searchprofile')),
-    path('', include('account.urls', namespace='account')),
     path('account/', include('account.urls', namespace='account')),
+    path('', include('account.urls', namespace='account')),
     path('admin/', admin.site.urls),
 
     path("reset_password/", auth_views.PasswordResetView.as_view(template_name='account/reset_password.html'), name='reset_password'),

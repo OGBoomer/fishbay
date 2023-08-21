@@ -48,7 +48,10 @@
                                 <a class='nav-link' href="{% url 'searchprofile:brand_list' %}">Brands</a>
                             </li>
                             <li class='nav-item'>
-                                <a class='nav-link' href="#">Account</a>
+                                <a class='nav-link' href="{% url 'account:profile' %}">Account</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' href="{% url 'account:subscription_page' %}">Pricing</a>
                             </li>
                             <li>
                                 {% if request.user.is_authenticated %}
