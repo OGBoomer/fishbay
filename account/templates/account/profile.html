@@ -6,24 +6,34 @@
         <div class="card-body">
             <div class='row'>
                 <div class='col text-center'>
-                        <h5>Account Information - Some Account:</h5> 
+                        <h5>Account Information - {{user}}:</h5>
                     <div id='tester'>
                     </div>
                 </div>
             </div>
             <div class='row'>
                 <div class='col'>
-                    <div> Status: Active</div>
+                    <div>Status: {{user.get_status_display}}</div>
                 </div>
             </div>
             <div class='row'>
                 <div class='col'>
-                    <div> Subscription Start Date: some date</div>
+                    <div> Subscription Start Date: {{user.sub_start}}</div>
                 </div>
             </div>
             <div class='row'>
                 <div class='col'>
-                    <div> Subscription End Date: some date</div>
+                    <div> Subscription End Date: {{user.sub_expire}}</div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col'>
+                    <div> Auto Renew: {{user.sub_auto_renew}}</div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col mt-2'>
+                    <div><a href='/account/go_stripe_portal/'> Manage Subscription </a></div>
                 </div>
             </div>
         </div>

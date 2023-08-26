@@ -13,6 +13,7 @@ urlpatterns = [
     path('subscription_page/', views.subscription_page, name='subscription_page'),
     path('payment_successful/', views.payment_successful, name='payment_successful'),
     path('payment_cancelled/', views.payment_cancelled, name='payment_cancelled'),
+    path('go_stripe_portal/', views.go_stripe_portal, name='go_stripe_portal'),
     path('stripe_webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('webhook_test/', views.webhook_test, name='webhook_test'),
 

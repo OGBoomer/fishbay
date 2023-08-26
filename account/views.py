@@ -1,17 +1,18 @@
 from django.shortcuts import render, redirect
-from .forms import AccountCreationForm
+from .forms import AccountCreationForm, SubscriptionForm
 # from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 import stripe
 import datetime
 import time
 import json
-from .models import StripePayment
+from .models import Account, StripePayment
 
 # from django.contrib.auth import get_user_model
 
@@ -30,7 +31,7 @@ def loginpage(request):
         if user is not None:
             print('user not none')
             login(request, user)
-            return redirect('account:homepage')
+            return redirect('account:profile')
         else:
             messages.error(request, 'Login Failed')
     return render(request, 'account/login.html')
@@ -55,9 +56,8 @@ def logoutpage(request):
     logout(request)
     return redirect('account:loginpage')
 
-
+@login_required()
 def profile(request):
-    print('in profile')
     return render(request, 'account/profile.html')
 
 
@@ -68,18 +68,35 @@ def homepage(request):
 def subscription_page(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     if request.method == 'POST':
-        account_profile, created = AccountProfile.objects.get_or_create(user=request.user)
-        customer_id = account_profile.stripe_cus_id
-        customer_email = None
-        if not customer_id:
-            customer_id = None
-            customer_email = request.user.email
-        checkout_session = stripe.checkout.Session.create(
+        form = SubscriptionForm(request.POST)
+        if form.is_valid():
+            customer_id = request.user.stripe_cus_id
+            customer_email = None
+            if not customer_id:
+                customer_id = None
+                customer_email = request.user.email
+            term = request.POST['sub_term']
+            match term:
+                case 'beta':
+                    request.user.status='BT'
+                    request.user.sub_start = datetime.datetime.now()
+                    request.user.save()
+                    print(f'time is {datetime.datetime.now()}')
+                    return redirect('/account/profile/')
+                case 'month':
+                    PRICE = settings.MONTHLY_PRICE
+                case 'semi':
+                    PRICE = settings.SEMI_PRICE
+                case 'year':
+                    PRICE = settings.ANNUAL_PRICE
+                case _:
+                    pass
+            checkout_session = stripe.checkout.Session.create(
             customer=customer_id,
             customer_email=customer_email,
             line_items=[
                 {
-                    'price': settings.PRODUCT_PRICE,
+                    'price': PRICE,
                     'quantity': 1
                 },
             ],
@@ -90,8 +107,10 @@ def subscription_page(request):
             success_url=settings.REDIRECT_DOMAIN + '/account/payment_successful?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=settings.REDIRECT_DOMAIN + '/account/payment_cancelled',
         )
-        return redirect(checkout_session.url, code=303)
-    return render(request, 'account/subscription_page.html')
+        # return redirect(checkout_session.url, code=303)
+    else:
+        form = SubscriptionForm()
+    return render(request, 'account/subscription_page.html', {'form':form})
 
 
 def get_or_none(model, **kwargs):
@@ -109,9 +128,16 @@ def payment_successful(request):
         customer = stripe.Customer.retrieve(session.customer)
         request.user.stripe_cus_id = customer.id
         request.user.save()
-        StripePayment.objects.create(user=request.user, stripe_checkout_id=checkout_session_id)
-    return render(request, 'account/payment_successful.html', {'customer': customer})
+    return render(request, 'account/profile')
 
+@login_required
+def go_stripe_portal(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
+    session = stripe.billing_portal.Session.create(
+        customer = request.user.stripe_cus_id,
+        return_url='http://www.myfishbay.com/account/profile',
+    )
+    return redirect(session.url)
 
 def payment_cancelled(request):
     return render(request, 'account/payment_cancelled.html')
@@ -140,23 +166,22 @@ def stripe_webhook(request):
         print("Webhook Stripe verificationError." + str(e))
         return HttpResponse({"success": True}, status=400)
     if event.type == 'customer.subscription.updated':
-        print("in sub")
         subscription = event.data.object
-        print(subscription)
         customer = stripe.Customer.retrieve(subscription.customer)
         user = Account.objects.get(email=customer.email)
-        print(f'sub is {subscription.id}')
         user.stripe_sub_id = subscription.id
         user.sub_start = datetime.date.fromtimestamp(subscription.current_period_start)
         user.sub_expire = datetime.date.fromtimestamp(subscription.current_period_end)
-        user.status = 'BT'
+        user.status = 'AT'
+        user.sub_auto_renew = not subscription.cancel_at_period_end
         user.save()
         #stripe_payment = StripePayment.objects.get(stripe_checkout_id=session_id)
         #line_items = stripe.checkout.Session.list_line_items(session_id, limit=1)
         #stripe_payment.payment_bool = True
         # stripe_payment.save()
-        print(subscription.customer)
-    else:
-        print(event.type)
-        print('no sub')
+    if event.type == 'customer.subscription.deleted':
+        subscription = event.data.object
+        user = Account.objects.get(stripe_sub_id=subscription.id)
+        user.sub_auto_renew = False
+        user.save()
     return HttpResponse(status=200)

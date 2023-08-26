@@ -50,6 +50,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     stripe_sub_id = models.CharField(max_length=500, blank=True)
     sub_start = models.DateField(blank=True, null=True)
     sub_expire = models.DateField(blank=True, null=True)
+    sub_auto_renew = models.BooleanField(default=True)
+    cancel_at_end = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

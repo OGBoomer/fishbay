@@ -4,16 +4,20 @@
 <div class='d-flex justify-content-center'>
     <div class="card w-50 mt-5">
         <div class="card-body">
-            {% if user.is_authenticated %}
-
+            <div class='mb-3'> Select Below:</br>Note: Paid subscriptions are not being accepted at this time.(Still working on the pricing.)</div>
             <form enctype='multipart/form-data' method='post' role='product_page'>
                 {% csrf_token %}
-                <h2> Hi {{ user }}! to pay, click on this button <button type='submit'
-                    class='btn btn-success' href='{% url "account:subscription_page" %}' data-bind-href='pricing'>Payment</button></h2>
+                {{ form }}
+                {% if user.is_authenticated %}
+                    {% if user.stripe_sub_id == '' %}
+                        <button type='submit' class='btn btn-success' href='{% url "account:subscription_page" %}'> Submit </button>
+                    {% else %}
+                        <h5>You have already subbed. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
+                    {% endif %}
+                {% else %}
+                    <h5><a class="small" href="{% url 'account:register' %}">Register</a> or <a href="{% url 'account:loginpage' %}">Login</a> to enable sign up.</h5>
+                {% endif %}
             </form>
-            {% else %}
-                <h2>You're not logged in ...</h2>
-            {% endif %}
         </div>
     </div>
 </div>
