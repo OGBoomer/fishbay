@@ -59,7 +59,7 @@ class AccountAdmin(UserAdmin):
         }),
         ('Myfishbay Fields', {
             'fields':
-                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire', 'sub_auto_renew', 'cancel_at_end')
+                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire', 'sub_auto_renew')
         }),
     )
 
@@ -74,7 +74,7 @@ class AccountAdmin(UserAdmin):
         }),
         ('Myfishbay Fields', {
             'fields':
-                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire', 'sub_auto_renew', 'cancel_at_end')
+                ('status', 'stripe_cus_id', 'stripe_sub_id', 'sub_start', 'sub_expire', 'sub_auto_renew')
         }),
     )
     search_fields = ('email',)

@@ -27,9 +27,7 @@ def loginpage(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
         user = authenticate(request, email=email, password=password)
-        print('in login')
         if user is not None:
-            print('user not none')
             login(request, user)
             return redirect('account:profile')
         else:
@@ -44,9 +42,11 @@ def register(request):
         form = AccountCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'account/login.html')
-        else:
-            print("not valid")
+            email = request.POST.get('email')
+            password = request.POST.get('password1')
+            user = authenticate(request, email=email, password=password)
+            login(request, user)
+            return render(request, 'account/profile.html')
     else:
         form = AccountCreationForm()
     return render(request, 'account/register.html', {'form': form})
@@ -56,6 +56,7 @@ def logoutpage(request):
     logout(request)
     return redirect('account:loginpage')
 
+
 @login_required()
 def profile(request):
     return render(request, 'account/profile.html')
@@ -63,6 +64,10 @@ def profile(request):
 
 def homepage(request):
     return render(request, 'account/home.html')
+
+
+def howto(request):
+    return render(request, 'account/howto.html')
 
 
 def subscription_page(request):
@@ -78,7 +83,7 @@ def subscription_page(request):
             term = request.POST['sub_term']
             match term:
                 case 'beta':
-                    request.user.status='BT'
+                    request.user.status = 'BT'
                     request.user.sub_start = datetime.datetime.now()
                     request.user.save()
                     print(f'time is {datetime.datetime.now()}')
@@ -92,25 +97,25 @@ def subscription_page(request):
                 case _:
                     pass
             checkout_session = stripe.checkout.Session.create(
-            customer=customer_id,
-            customer_email=customer_email,
-            line_items=[
-                {
-                    'price': PRICE,
-                    'quantity': 1
-                },
-            ],
-            mode='subscription',
-            # subscription_data={
-            #     'trial_period_days': 7
-            # },
-            success_url=settings.REDIRECT_DOMAIN + '/account/payment_successful?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=settings.REDIRECT_DOMAIN + '/account/payment_cancelled',
-        )
+                customer=customer_id,
+                customer_email=customer_email,
+                line_items=[
+                    {
+                        'price': PRICE,
+                        'quantity': 1
+                    },
+                ],
+                mode='subscription',
+                # subscription_data={
+                #     'trial_period_days': 7
+                # },
+                success_url=settings.REDIRECT_DOMAIN + '/account/payment_successful?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=settings.REDIRECT_DOMAIN + '/account/payment_cancelled',
+            )
         # return redirect(checkout_session.url, code=303)
     else:
         form = SubscriptionForm()
-    return render(request, 'account/subscription_page.html', {'form':form})
+    return render(request, 'account/subscription_page.html', {'form': form})
 
 
 def get_or_none(model, **kwargs):
@@ -130,14 +135,16 @@ def payment_successful(request):
         request.user.save()
     return render(request, 'account/profile')
 
+
 @login_required
 def go_stripe_portal(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
     session = stripe.billing_portal.Session.create(
-        customer = request.user.stripe_cus_id,
+        customer=request.user.stripe_cus_id,
         return_url='http://www.myfishbay.com/account/profile',
     )
     return redirect(session.url)
+
 
 def payment_cancelled(request):
     return render(request, 'account/payment_cancelled.html')

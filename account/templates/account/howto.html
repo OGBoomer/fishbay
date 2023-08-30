@@ -1,13 +1,57 @@
 {% extends 'index.htmx' %}
+{% load static %}
 
 {% block content %}
-<div class='d-flex justify-content-center'>
-    <div class="card mt-5 fishbay-card">
-        <div class="card-body d-flex justify-content-center">
-            <h1>How to use Myfishbay</h1>
+<div class='d-flex justify-content-center cols-12'>
+    <div class="card mt-5 fishbay-card text-center cols-12">
+        <div class="card-body">
+            <p>The philosopy around Myfishbay is to make data driven buying decisions. Most sellers do this with research and experience. Myfishbay allows you to shorten the experience side as you can take your research with you to the buying location.</p>
 
-            <p>blah blah</p>
+            <p>This first step in this process is to create a research profile. A research profile consists of a Brand - Category pairing.</p>
 
+            <img src="{% static 'images/create_profile.png' %}" alt="create_profile"/>
+            <img src="{% static 'images/create_profile2.png' %}" alt="create_profile2"/>
+
+            <p>If you have already used the brand you can select it from the dropdown list. If it is a new brand just type it in the text box. You then select the category you want to match with that brand and click the button. 
+
+            <p>You can match a brand with as many categories as you like but each one is a seperate profile.</p>
+
+            <p>Note: For the search to work properly you must type the brand exactly as Ebay has it in thier system including upper/lower case letters.<br> (Adidas does not equal adidas)</p>
+            <hr>
+
+            <img src="{% static 'images/profile_list.png' %}" alt="profile_list"/>
+
+            <p>On the profile list you have 3 options. Run searches, add models, or delete the profile.</p>
+
+            <p>Some clothing items will have certain models you will want to include in your search.</p> 
+            <p>For examples if you are researching Levi's Jeans you may want to add models for 501's or 511's. These models will then show up on your search page. <p>
+            <p>Again it is important to note that your models must match what Ebay has for that model in the left hand navigation.</p>
+            <hr>
+            <img src="{% static 'images/search_page.png' %}" alt="search_page"/>
+
+            </p>When you get to the search page it is self explanitory. You just select from the drop downs and check boxes the item specifics you wish to run agianst the search profile then click the search button.</p>
+            <p> You can enter any keywords seperated by spaces or commas that you want to include in the search.</p>
+            <p>Selecting an item here is the same as checking the left hand navigation on Ebay.</p>
+            <p>You can run as many different combinations of item specifics as you wish. Some item specifics allow you to select multiple choices, for example you can search L and XL on the same search.</p>
+            <hr>
+            <img src="{% static 'images/search_page2.png' %}" alt="search_page2"/>
+
+            <p>Your searches will populate below with the item specifics, relavent data, and three buttons</p>
+            <p>First button is used to re-run the search with the same item specifics to get current numbers. A second button to delete the search. A final button that is a link to Ebay with the search parameters.</p>
+            <hr>
+            <img src="{% static 'images/ebay_screen.png' %}" alt="ebay_screen"/>
+
+            <p>This allows you to verify that all of your item specifics are represented.</p>
+            <hr>
+            <p>The brand page is what you want to use while in the field buying inventory</p>
+            
+            <img src="{% static 'images/brand_page.png' %}" alt="brand_page"/>
+
+            <p>The initial page is a list of brands with two options. One to go to the details and one to delete the brand</p>
+            <hr>
+            <img src="{% static 'images/brand_detail.png' %}" alt="brand_detail"/>
+
+            <p>The final brand detail page gives you the data of all your research organized by category to quickly determine if it is a profitable item or not. There is also a link to go directly to the create a search page for each category.</p>
         </div>
     </div>
 </div>

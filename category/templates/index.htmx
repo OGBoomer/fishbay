@@ -30,7 +30,7 @@
     <div id="maincontent" class='flex-grow-1'>
       <div class='d-flex-column'>
         <div id='topbar' class='d-flex justify-content-left bg-white mb-4 border-4'>
-            <nav class='navbar fixed-top navbar-expand navbar-light'>
+            <nav class='navbar fixed-top navbar-expand bg-light'>
                 <div class='container-fluid'>
                     <a class="navbar-brand" href='#'>
                     <i class="fas fa-fish-fins mr-3"></i>Myfishbay Beta</a>
@@ -52,6 +52,9 @@
                             </li>
                             <li class='nav-item'>
                                 <a class='nav-link' href="{% url 'account:subscription_page'%}">Pricing</a>
+                            </li>
+                            <li class='nav-item'>
+                                <a class='nav-link' href="{% url 'account:howto'%}">How To</a>
                             </li>
                             <li>
                                 {% if request.user.is_authenticated %}

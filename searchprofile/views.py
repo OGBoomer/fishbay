@@ -4,24 +4,35 @@ from django.db import IntegrityError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.utils.http import urlencode
 from O365 import Account
 from specs.models import *
 from .models import *
 from .forms import *
-from account.decorators import active_status_required
 import requests
 import json
 import string
 import re
 import copy
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from render_block import render_block_to_string
 
 
+def check_active_status(user):
+    if user.sub_expire:
+        if datetime.date.today() > user.sub_expire:
+            user.status = 'IA'
+            user.save()
+    if user.status != 'IA':
+        return True
+    return False
+
+
 @login_required()
-@active_status_required
 def profile_list(request):
+    if not check_active_status(request.user):
+        return redirect('/account/profile/')
     if request.method == 'POST':
         form = CreateProfileForm(request.POST, user=request.user)
         if form.is_valid():
@@ -37,9 +48,9 @@ def profile_list(request):
             except IntegrityError as e:
                 request.session['notice'] = 'Profile already exists.'
                 triggers = 'check_notice'
-            context = {'form': CreateProfileForm(user=request.user)}
+            context = {'form': CreateProfileForm(user=request.user), }
         else:
-            context = {'form': CreateProfileForm(request.POST, user=request.user)}
+            context = {'form': CreateProfileForm(request.POST, user=request.user), }
         html = render_block_to_string('searchprofile/profilelist.html', 'profile-form', context)
         response = HttpResponse(html)
         response['HX-Trigger'] = triggers
@@ -48,14 +59,16 @@ def profile_list(request):
         print('oops')
         context = {
             'form': CreateProfileForm(user=request.user),
-            'profiles': SearchProfile.objects.filter(brand__name__istartswith='', user=request.user,)
+            'profiles': SearchProfile.objects.filter(brand__name__istartswith='', user=request.user),
         }
+    print(context)
     return render(request, 'searchprofile/profilelist.html', context)
 
 
 @login_required()
-@active_status_required
 def brand_list(request):
+    if not check_active_status(request.user):
+        return redirect('/account/profile/')
     if request.method == 'POST':
         form = CreateBrandForm(request.POST)
         if form.is_valid():
@@ -127,7 +140,6 @@ def delete_brand(request, brand_id):
 
 
 @login_required()
-@active_status_required
 def profile_detail(request, profile_id):
     profile = SearchProfile.objects.get(pk=profile_id)
     form = get_form_by_type(profile=profile)
@@ -142,7 +154,6 @@ def profile_detail(request, profile_id):
 
 
 def get_form_by_type(profile_id='', profile='', form_data=''):
-    print(form_data)
     if profile == '':
         if profile_id == '':
             profile_id = form_data['profile_id']
@@ -174,7 +185,6 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
 
 
 @login_required()
-@active_status_required
 def brand_detail(request, brand_id):
     brand = Brand.objects.get(pk=brand_id)
     profiles = SearchProfile.objects.filter(user=request.user, brand=brand_id).prefetch_related('results')
@@ -196,7 +206,6 @@ def update_size(request):
 
 
 @login_required()
-@active_status_required
 def create_search(request):
     profile = SearchProfile.objects.get(pk=request.POST['profile_id'])
     if request.method == 'POST':
@@ -468,7 +477,7 @@ def delete_model(request, profile_id, model_id):
     return response
 
 
-def check_notice(request):
+def check_notice(request, notice_url):
     context = {
         'notice': request.session['notice']
     }

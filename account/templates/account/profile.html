@@ -33,7 +33,11 @@
             </div>
             <div class='row'>
                 <div class='col mt-2'>
-                    <div><a href='/account/go_stripe_portal/'> Manage Subscription </a></div>
+                    {% if user.status != 'BT' or user.stripe_cus_id == None %}
+                        <div><a href='/account/go_stripe_portal/'> Manage Subscription </a></div>
+                    {% else %}
+                        <div><a href='#'> Manage Subscription </a> -- Diabled for Beta/Unsubscribed Accounts</div>
+                    {% endif %}
                 </div>
             </div>
         </div>

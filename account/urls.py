@@ -16,6 +16,7 @@ urlpatterns = [
     path('go_stripe_portal/', views.go_stripe_portal, name='go_stripe_portal'),
     path('stripe_webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('webhook_test/', views.webhook_test, name='webhook_test'),
+    path('howto/', views.howto, name='howto'),
 
     # path("reset_password/", auth_views.PasswordResetView.as_view(), name='reset_password'),
     # path("reset_password_sent/", auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

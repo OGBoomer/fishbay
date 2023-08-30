@@ -9,10 +9,12 @@
                 {% csrf_token %}
                 {{ form }}
                 {% if user.is_authenticated %}
-                    {% if user.stripe_sub_id == '' %}
-                        <button type='submit' class='btn btn-success' href='{% url "account:subscription_page" %}'> Submit </button>
+                    {% if user.status == 'BT' %}
+                        <h5>No paid subscription available. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
+                    {% elif user.strip_sub_id != '' %}
+                        <h5>You have already subscribed. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
                     {% else %}
-                        <h5>You have already subbed. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
+                        <button type='submit' class='btn btn-success' href='{% url "account:subscription_page" %}'> Submit </button>
                     {% endif %}
                 {% else %}
                     <h5><a class="small" href="{% url 'account:register' %}">Register</a> or <a href="{% url 'account:loginpage' %}">Login</a> to enable sign up.</h5>
