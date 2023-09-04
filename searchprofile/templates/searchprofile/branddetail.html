@@ -46,7 +46,7 @@
 							</thead>
 							{% for result in profile.results.all %}
 								<tr>
-									<td class='text-nowrap'>{{ result.heading }}<span class='fst-italic'>{{ result.keywords }}</span></td>
+									<td class='text-nowrap'>{{ result.heading }}<span class='fst-italic'> {{ result.keywords }}</span></td>
 									<td>{{ result.ratio }}</td>
 									<td>{{ result.sold }}</td>
 									<td>${{ result.avg_sold_price|floatformat:"2g" }}</td>

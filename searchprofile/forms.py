@@ -103,7 +103,7 @@ class GenericMensClothingForm(forms.Form):
             self.item_type = self.data['item_type']
         super().__init__(*args, **kwargs)
         self.fields['size_type'].widget.attrs.update({
-            'hx-post': "/search/updatesize",
+            'hx-post': "/search/updatesize/",
             'hx-trigger': 'change',
             'hx-target': '#size',
             'hx-swap': 'innerHTML'
@@ -158,8 +158,9 @@ class GenericMensPantForm(GenericMensClothingForm):
 
 class GenericMensShortForm(GenericMensPantForm):
     style = EmptyChoiceField(choices=MensShortStyle.objects.values_list('code', 'name'), required=False)
+    inseam = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=MensShortInseamSize.objects.values_list('code', 'name'), required=False)
 
-    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'style', 'closure', 'inseam', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'inseam', 'style', 'closure', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class MensJacketForm(GenericMensTopForm):
