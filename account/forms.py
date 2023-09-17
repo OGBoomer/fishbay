@@ -11,9 +11,17 @@ class FishbaySetPasswordForm(SetPasswordForm):
 
 
 class AccountCreationForm(UserCreationForm):
+    beta_code = forms.CharField(max_length=20, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(AccountCreationForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['password1', 'password2']:
+            self.fields[fieldname].help_text = None
+
     class Meta:
         model = Account
-        fields = ['email', ]
+        fields = ['email', 'password1', 'password2', 'beta_code' ]
 
 
 class AccountChangeForm(UserChangeForm):

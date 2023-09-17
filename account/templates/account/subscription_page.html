@@ -11,7 +11,7 @@
                 {% if user.is_authenticated %}
                     {% if user.status == 'BT' %}
                         <h5>No paid subscription available. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
-                    {% elif user.strip_sub_id != '' %}
+                    {% elif user.strip_sub_id != None %}
                         <h5>You have already subscribed. Go to your <a href="{% url 'account:profile' %}">Account</a> Page</h5>
                     {% else %}
                         <button type='submit' class='btn btn-success' href='{% url "account:subscription_page" %}'> Submit </button>

@@ -86,7 +86,6 @@ def subscription_page(request):
                     request.user.status = 'BT'
                     request.user.sub_start = datetime.datetime.now()
                     request.user.save()
-                    print(f'time is {datetime.datetime.now()}')
                     return redirect('/account/profile/')
                 case 'month':
                     PRICE = settings.MONTHLY_PRICE
