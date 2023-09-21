@@ -477,9 +477,10 @@ def delete_model(request, profile_id, model_id):
     return response
 
 
-def check_notice(request, notice_url):
+def check_notice(request):
+    notice = request.session.get('notice', None)
     context = {
-        'notice': request.session['notice']
+        'notice': notice
     }
     request.session['notice'] = ''
     html = render_block_to_string('searchprofile/profiledetail.html', 'notice', context)

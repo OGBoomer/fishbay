@@ -46,7 +46,18 @@ def register(request):
             password = request.POST.get('password1')
             user = authenticate(request, email=email, password=password)
             login(request, user)
+            if request.POST['beta_code'] is not None:
+                if request.POST['beta_code'] in ('DemoBeta', 'DailyBeta'):
+                    request.user.status = 'BT'
+                    request.user.sub_start = datetime.datetime.now()
+                    request.user.save()
+                else:
+                    request.session['notice'] = 'Account created, but Beta Code was invalid. Contact betatest@myfishbay.com for help'
+                    return redirect('account:subscription_page')
+            request.session['notice'] = 'Beta Test account created'
             return render(request, 'account/profile.html')
+        else:
+            return render(request, 'account/register.html', {'form': form})
     else:
         form = AccountCreationForm()
     return render(request, 'account/register.html', {'form': form})
@@ -72,6 +83,7 @@ def howto(request):
 
 def subscription_page(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY_TEST
+    form = SubscriptionForm()
     if request.method == 'POST':
         form = SubscriptionForm(request.POST)
         if form.is_valid():

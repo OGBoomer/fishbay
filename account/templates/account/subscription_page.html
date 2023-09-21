@@ -3,8 +3,20 @@
 {% block content %}
 <div class='d-flex justify-content-center'>
     <div class="card w-50 mt-5">
-        <div class="card-body">
+        <div class="card-body" hx-trigger='load, check_notice from:body'
+                                hx-get="{% url 'searchprofile:check_notice' %}"
+                                hx-target='#notice-block'
+                                hx-swap='innerHTML'>
             <div class='mb-3'> Select Below:</br>Note: Paid subscriptions are not being accepted at this time.(Still working on the pricing.)</div>
+            <div id='notice-block'>
+                {% block notice %}
+                    {% if notice %}
+                        <div class='text-success text-center'>
+                            <h6>{{ notice }}</h6>
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
             <form enctype='multipart/form-data' method='post' role='product_page'>
                 {% csrf_token %}
                 {{ form }}
