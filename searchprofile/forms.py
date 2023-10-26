@@ -120,11 +120,21 @@ class GenericMensClothingForm(forms.Form):
         self.fields['item_type'] = forms.CharField(initial=self.item_type, label='', widget=forms.HiddenInput())
 
 
+class WomensClothingForm(GenericMensClothingForm):
+    size_type = EmptyChoiceField(choices=WomensSizeType.objects.values_list('code', 'name'), required=False)
+
+
 class GenericMensTopForm(GenericMensClothingForm):
     sleeve_length = EmptyChoiceField(choices=SleeveLength.objects.values_list('code', 'name'), required=False)
     collar = EmptyChoiceField(choices=MensCollar.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
+
+class WomensTopForm(WomensClothingForm):
+    sleeve_length = EmptyChoiceField(choices=SleeveLength.objects.values_list('code', 'name'), required=False)
+    collar = EmptyChoiceField(choices=MensCollar.objects.values_list('code', 'name'), required=False)
+    keywords = forms.CharField(max_length=250, required=False)
     field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
@@ -190,6 +200,9 @@ def get_size_qs_by_type(size_type, item_type):
         case 'GMP' | 'GMS' | 'MAP' | 'MPT':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = MensPantSize.objects.filter(size_type=size_type).values_list('code', 'name')
+        case 'WTP':
+            size_type = WomensSizeType.objects.get(code=size_type)
+            qs = WomensTopSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case _:
             print('no match')
             qs = ''

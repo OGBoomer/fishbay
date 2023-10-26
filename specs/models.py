@@ -104,7 +104,7 @@ class MensCollar(models.Model):
         return self.name
 
 
-class SizeType(models.Model):
+class WomensSizeType(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
 
@@ -124,6 +124,18 @@ class GenericSize(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
     size_type = models.ForeignKey(GenericSizeType, null=False, on_delete=models.CASCADE, related_name='sizetype')
+
+    def __str__(self):
+        return self.name
+
+
+class WomensTopSize(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=False, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+    size_type = models.ForeignKey(WomensSizeType, null=False, on_delete=models.CASCADE, related_name='Womenssizetype')
+
+    class Meta:
+        unique_together = ('name', 'size_type')
 
     def __str__(self):
         return self.name

@@ -63,7 +63,7 @@ class ProfileModel(models.Model):
         return self.name
 
 
-class MensClothingItem(models.Model):
+class ClothingItem(models.Model):
     vintage = models.CharField(max_length=30, blank=True, null=True)
     condition = models.CharField(max_length=30, blank=True, null=True)
     size_type = models.CharField(max_length=30, blank=True, null=True)
@@ -79,7 +79,13 @@ class MensClothingItem(models.Model):
         abstract = True
 
 
-class GenericMensTop(MensClothingItem):
+class GenericMensTop(ClothingItem):
+    sleeve_length = models.CharField(max_length=30, blank=True, null=True)
+    collar = models.CharField(max_length=30, blank=True, null=True)
+    result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
+class GenericWomensTop(ClothingItem):
     sleeve_length = models.CharField(max_length=30, blank=True, null=True)
     collar = models.CharField(max_length=30, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
@@ -109,7 +115,7 @@ class MensDressShirt(GenericMensTop):
     neck_size = models.CharField(max_length=50, blank=True, null=True)
 
 
-class GenericMensPant(MensClothingItem):
+class GenericMensPant(ClothingItem):
     waist_size = models.CharField(max_length=30, blank=True, null=True)
     inseam = models.CharField(max_length=30, blank=True, null=True)
     rise = models.CharField(max_length=30, blank=True, null=True)

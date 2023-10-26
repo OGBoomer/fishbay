@@ -179,6 +179,8 @@ def get_form_by_type(profile_id='', profile='', form_data=''):
             form = MensHoodiesSweatshirtsForm(data=field_data, profile=profile)
         case 'MDS':
             form = MensDressShirtForm(data=field_data, profile=profile)
+        case 'WTP':
+            form = WomensTopForm(data=field_data, profile=profile)
         case _:
             pass
     return form
@@ -534,12 +536,18 @@ def jplay(request):
     #             'Thermal', 'Waterproof', 'Water Resistant']
     # data_list = ['14 in', '14.5 in', '15 in', '15.5 in', '16 in', '16.5 in', '17 in', '17.5 in', '18 in', '18.5 in', '19 in', '19.5 in',
     #              '20 in', '22 in', '22.5', '23 in']
-    data_list = ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+    # iseam data_list = ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
+    # womenregularsizedata_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '0', '2', '4', '5', '6', '7', '8', '10', '12', '14', '15', '16', '17', '18', '19', '20', '22', '30', '32', '34', '36', '38', '40', '42', '44', '46', '48', '50']
+    # womensplussizedata_list = ['3XL', '4XL', '5XL', '6XL', '7XL', '8XL', '9XL', '10XL', '18', '20', '22', '24', '26', '28', '30', '32', '34', '36', '38', '40', '42', '44', '46', '48', '50', '52', '54', '56', '58', '14W', '16W', '18W', '20W', '22W', '24W', '26W', '28W', '30W', '32W', '34W', '36W', '38W', '40W', '42W', '44W', '0X', '1X', '2X', '3X', '4X', '5X', '6X', '7X', '8X', '9X', '10X']
+    # womenespetitesizedata_list = ['P3XS', 'P2XS', 'PXS', 'PP', 'PS', 'PM', 'PL', 'PXL', 'P2XL', '00P', '0P', '2P', '4P', '6P', '8P', '10P', '12P', '14P', '16P', '18P', '20P', '22P', '24P', '26P', '0XP', '1XP', '2XP', '3XP', '4XP', '5XP', '6XP', '7XP', '8XP']
+    # womenstallsizedata_list = ['XS Tall', 'S Tall', 'M Tall', 'L Tall', 'XL Tall', '2XL Tall', '3XL Tall', '00 Tall', '0 Tall', '2 Tall', '4 Tall', '6 Tall', '8 Tall', '10 Tall', '12 Tall', '14 Tall', '16 Tall', '18 Tall', '20 Tall', '22 Tall', '24 Tall', '26 Tall', '0XT', '1XT', '2XT', '3XT', '4XT']
+    # womensjuniorssizedata_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22']
+    data_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '0X', '1X', '2X', '3X', '4X', '5X', '6X', '7X', '8X']
 
     for data in data_list:
-        code = '&Inseam=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        code = code + '%2520in'
-        MensShortInseamSize.objects.create(name=data, code=code)
+        code = '&Size=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        stype = WomensSizeType.objects.get(name='Maternity')
+        WomensTopSize.objects.create(name=data, code=code, size_type=stype)
         print(f'{data} added')
 
     print("all done")
