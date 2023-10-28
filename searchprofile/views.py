@@ -309,6 +309,8 @@ def get_object_by_type(item_type, result):
             item_object = MensDressShirt.objects.create(result=result)
         case 'MST':
             item_object = MensDressShirt.objects.create(result=result)
+        case 'WTP':
+            item_object = GenericWomensTop.objects.create(result=result)
         case _:
             pass
     return item_object

@@ -87,7 +87,7 @@ class GenericMensTop(ClothingItem):
 
 class GenericWomensTop(ClothingItem):
     sleeve_length = models.CharField(max_length=30, blank=True, null=True)
-    collar = models.CharField(max_length=30, blank=True, null=True)
+    top_type = models.CharField(max_length=30, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
 
 

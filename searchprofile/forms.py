@@ -133,9 +133,9 @@ class GenericMensTopForm(GenericMensClothingForm):
 
 class WomensTopForm(WomensClothingForm):
     sleeve_length = EmptyChoiceField(choices=SleeveLength.objects.values_list('code', 'name'), required=False)
-    collar = EmptyChoiceField(choices=MensCollar.objects.values_list('code', 'name'), required=False)
+    top_type = EmptyChoiceField(choices=WomensTopType.objects.values_list('code', 'name'), required=False, label='Type')
     keywords = forms.CharField(max_length=250, required=False)
-    field_order = ['vintage', 'condition', 'size_type', 'size', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'top_type', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class GenericMensPoloForm(GenericMensTopForm):

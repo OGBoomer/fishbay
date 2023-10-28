@@ -141,6 +141,14 @@ class WomensTopSize(models.Model):
         return self.name
 
 
+class WomensTopType(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
 class MensShirtNecksize(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
