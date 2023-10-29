@@ -94,8 +94,8 @@ class GenericMensClothingForm(forms.Form):
     item_model = EmptyChoiceField(label='Model', required=False)
 
     def __init__(self, *args, **kwargs):
-        # kwargs should contain a profile variable and either an item_type variable
-        # or form data in the data variable that will contain the item_type.
+        # kwargs should contain a profile variable AND either an item_type variable
+        # OR form data in the data variable that will contain the item_type.
         self.profile = kwargs.pop('profile', None)
         self.data = kwargs['data']
         self.item_type = kwargs.pop('item_type', None)
@@ -109,13 +109,16 @@ class GenericMensClothingForm(forms.Form):
             'hx-swap': 'innerHTML'
         })
         if 'size' in self.data:
-            qs = get_size_qs_by_type(self.data['size_type'], self.data['item_type'])
-            self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=qs, initial=self.data['size'])
+            # size was passed in the form check if it has a value
+            if self.data['size']:
+                print(f'size is {self.data["size"]}')
+                sizeqs = get_size_qs_by_type(self.data['size_type'], self.data['item_type'])
+                self.fields['size'] = forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={'size': '1', 'onFocus': 'growSize(event);', 'onBlur': 'shrinkSize(event);'}), choices=sizeqs, initial=self.data['size'], required=False)
         try:
-            qs = ProfileModel.objects.filter(profile=self.profile).values_list('code', 'name')
+            itemqs = ProfileModel.objects.filter(profile=self.profile).values_list('code', 'name')
         except ProfileModel.DoesNotExist:
-            qs = ''
-        self.fields['item_model'] = EmptyChoiceField(choices=qs, label='Model', required=False)
+            itemqs = ''
+        self.fields['item_model'] = EmptyChoiceField(choices=itemqs, label='Model', required=False)
         self.fields['profile_id'] = forms.IntegerField(initial=self.profile.id, label='', widget=forms.HiddenInput())
         self.fields['item_type'] = forms.CharField(initial=self.item_type, label='', widget=forms.HiddenInput())
 
@@ -134,8 +137,9 @@ class GenericMensTopForm(GenericMensClothingForm):
 class WomensTopForm(WomensClothingForm):
     sleeve_length = EmptyChoiceField(choices=SleeveLength.objects.values_list('code', 'name'), required=False)
     top_type = EmptyChoiceField(choices=WomensTopType.objects.values_list('code', 'name'), required=False, label='Type')
+    neckline = EmptyChoiceField(choices=WomensNeckline.objects.values_list('code', 'name'), required=False)
     keywords = forms.CharField(max_length=250, required=False)
-    field_order = ['vintage', 'condition', 'size_type', 'size', 'top_type', 'sleeve_length', 'fit', 'collar', 'pattern', 'material', 'fabric', 'color', 'item_model']
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'top_type', 'sleeve_length', 'neckline', 'fit', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class GenericMensPoloForm(GenericMensTopForm):

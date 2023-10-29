@@ -213,9 +213,9 @@ def create_search(request):
     if request.method == 'POST':
         form = get_form_by_type(form_data=request.POST, profile=profile)
         if form.is_valid():
-            # form = GenericMensTopForm(request.POST, profile=profile)
             url_string = build_url_string(copy.deepcopy(form.cleaned_data), profile)
             if url_string:
+                print('in url string')
                 data = get_search_data(url_string)
                 heading = build_search_heading(copy.deepcopy(form.cleaned_data))
                 search_result = SearchResult.objects.create(profile=profile, forsale=data['forsale'], avg_forsale_price=data['avg_forsale_price'],
@@ -226,10 +226,11 @@ def create_search(request):
             else:
                 messages.info(request, 'Problem contact administrator')
         else:
+            print('not valid')
+            print(form.errors)
             messages.info(request, 'Problem contact administrator')
     else:
         form = get_form_by_type(profile=profile)
-        # form = GenericMensTopForm(profile=profile)
         triggers = ''
     context = {
         'profile': profile,
@@ -523,9 +524,9 @@ def jplay(request):
     # data_listfabric = ['Canvas', 'Chambray', 'Chiffon', 'Corduroy', 'Crochet', 'Damask', 'Denim', 'Down',
     #              'Flannel', 'Fleece', 'Jersey', 'Knit', 'Lace', 'Microfiber', 'Rayon', 'Satin', 'Tweed',
     #              'Twill', 'Velvet', 'Woven']
-    # data_listneckline = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
-    #              'Mock Neck', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
-    #              'V-Neck']
+    data_list = ['Boat Neck', 'Collared', 'Cowl Neck', 'Crew Neck', 'Halter', 'Henley', 'High Neck',
+                 'Mock Neck', 'Off the Shoulder', 'One Shoulder', 'Round Neck', 'Scoop Neck', 'Square Neck', 'Sweetheart', 'Turtleneck',
+                 'V-Neck']
     # data_listclosure = ['Buckle', 'Button', 'Drawstring', 'Hook & Eye', 'Hook & Loop', 'Lace Up', 'Snap', 'Tie', 'Zip']
     # data_listshortstype = ['Bermuda', 'Biker', 'Cargo', 'Chino', 'Sweat']
     # data_listjackettype = ['Blazer', 'Cape', 'Coat', 'Coatigan', 'Jacket', 'Poncho', 'Vest']
@@ -544,12 +545,12 @@ def jplay(request):
     # womenespetitesizedata_list = ['P3XS', 'P2XS', 'PXS', 'PP', 'PS', 'PM', 'PL', 'PXL', 'P2XL', '00P', '0P', '2P', '4P', '6P', '8P', '10P', '12P', '14P', '16P', '18P', '20P', '22P', '24P', '26P', '0XP', '1XP', '2XP', '3XP', '4XP', '5XP', '6XP', '7XP', '8XP']
     # womenstallsizedata_list = ['XS Tall', 'S Tall', 'M Tall', 'L Tall', 'XL Tall', '2XL Tall', '3XL Tall', '00 Tall', '0 Tall', '2 Tall', '4 Tall', '6 Tall', '8 Tall', '10 Tall', '12 Tall', '14 Tall', '16 Tall', '18 Tall', '20 Tall', '22 Tall', '24 Tall', '26 Tall', '0XT', '1XT', '2XT', '3XT', '4XT']
     # womensjuniorssizedata_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22']
-    data_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '0X', '1X', '2X', '3X', '4X', '5X', '6X', '7X', '8X']
+    # womensmaternitydata_list = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '0X', '1X', '2X', '3X', '4X', '5X', '6X', '7X', '8X']
 
     for data in data_list:
-        code = '&Size=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
-        stype = WomensSizeType.objects.get(name='Maternity')
-        WomensTopSize.objects.create(name=data, code=code, size_type=stype)
+        code = '&Neckline=' + data.replace('/', '%252F').replace(' & ', '%2520%2526%2520').replace(' ', '%2520').replace('-', '%252D')
+        # stype = WomensSizeType.objects.get(name='Maternity')
+        WomensNeckline.objects.create(name=data, code=code)
         print(f'{data} added')
 
     print("all done")
