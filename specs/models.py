@@ -229,6 +229,17 @@ class MensPantClosure(models.Model):
         return self.name
 
 
+class JeansStyle(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class MensShortStyle(models.Model):
     name = models.CharField(max_length=50, blank=True, unique=True, null=False)
     code = models.CharField(max_length=100, blank=False, null=False)
@@ -289,6 +300,22 @@ class MensJacketClosure(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class DressStyle(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
+class DressLength(models.Model):
+    name = models.CharField(max_length=50, blank=True, unique=True, null=False)
+    code = models.CharField(max_length=100, blank=False, null=False)
 
     def __str__(self):
         return self.name

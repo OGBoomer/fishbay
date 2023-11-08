@@ -142,6 +142,16 @@ class WomensTopForm(WomensClothingForm):
     field_order = ['vintage', 'condition', 'size_type', 'size', 'top_type', 'sleeve_length', 'neckline', 'fit', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
+class WomensDressForm(WomensClothingForm):
+    fit = None
+    sleeve_length = EmptyChoiceField(choices=SleeveLength.objects.values_list('code', 'name'), required=False)
+    dress_style = EmptyChoiceField(choices=DressStyle.objects.values_list('code', 'name'), required=False, label='Style')
+    dress_length = EmptyChoiceField(choices=DressLength.objects.values_list('code', 'name'), required=False, label='Length')
+    neckline = EmptyChoiceField(choices=WomensNeckline.objects.values_list('code', 'name'), required=False)
+    keywords = forms.CharField(max_length=250, required=False)
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'dress_style', 'dress_length', 'sleeve_length', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
+
 class GenericMensPoloForm(GenericMensTopForm):
     neckline = EmptyChoiceField(choices=Neckline.objects.values_list('code', 'name'), required=False)
 
@@ -168,6 +178,12 @@ class GenericMensPantForm(GenericMensClothingForm):
     keywords = forms.CharField(max_length=250, required=False)
 
     field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'inseam', 'closure', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
+
+
+class JeansForm(GenericMensPantForm):
+    jeans_style = EmptyChoiceField(choices=JeansStyle.objects.values_list('code', 'name'), required=False, label='Style')
+
+    field_order = ['vintage', 'condition', 'size_type', 'size', 'waist_size', 'inseam', 'jeans_style', 'closure', 'rise', 'fit', 'neckline', 'pattern', 'material', 'fabric', 'color', 'item_model']
 
 
 class GenericMensShortForm(GenericMensPantForm):
@@ -204,7 +220,7 @@ def get_size_qs_by_type(size_type, item_type):
         case 'GMP' | 'GMS' | 'MAP' | 'MPT':
             size_type = GenericSizeType.objects.get(code=size_type)
             qs = MensPantSize.objects.filter(size_type=size_type).values_list('code', 'name')
-        case 'WTP':
+        case 'WTP' | 'DRS' | 'WJN':
             size_type = WomensSizeType.objects.get(code=size_type)
             qs = WomensTopSize.objects.filter(size_type=size_type).values_list('code', 'name')
         case _:

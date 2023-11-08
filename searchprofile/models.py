@@ -92,6 +92,14 @@ class GenericWomensTop(ClothingItem):
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
 
 
+class WomensDress(ClothingItem):
+    sleeve_length = models.CharField(max_length=30, blank=True, null=True)
+    dress_style = models.CharField(max_length=30, blank=True, null=True)
+    dress_length = models.CharField(max_length=30, blank=True, null=True)
+    neck_line = models.CharField(max_length=30, blank=True, null=True)
+    result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
 class MensActivewearTop(GenericMensTop):
     place_holder = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=True)
 
@@ -122,6 +130,10 @@ class GenericMensPant(ClothingItem):
     rise = models.CharField(max_length=30, blank=True, null=True)
     closure = models.CharField(max_length=30, blank=True, null=True)
     result = models.ForeignKey(SearchResult, on_delete=models.CASCADE, null=False)
+
+
+class WomensJeans(GenericMensPant):
+    jean_style = models.CharField(max_length=30, blank=True, null=True)
 
 
 class MensActivewearPant(GenericMensPant):
