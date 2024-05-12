@@ -1,0 +1,8 @@
+<button class='btn tt' title='See research for this brand'
+            hx-get="{% url 'searchprofile:brand_detail' record.pk %}",
+            hx-target='{{ target }}',
+            hx-swap='innerHTML',
+            hx-push-url='true',
+            hx-trigger='click'>
+        <i class='fa-solid fa-clipboard fa-xl'></i>
+</button>

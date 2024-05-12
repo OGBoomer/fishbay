@@ -47,7 +47,7 @@ def register(request):
             user = authenticate(request, email=email, password=password)
             login(request, user)
             if request.POST['beta_code'] is not None:
-                if request.POST['beta_code'] in ('DemoBeta', 'DailyBeta'):
+                if request.POST['beta_code'] in ('DemBeta', 'DailyBeta'):
                     request.user.status = 'BT'
                     request.user.sub_start = datetime.datetime.now()
                     request.user.save()

@@ -1,0 +1,6 @@
+{% extends 'index.htmx' %}
+{% load render_table from django_tables2 %}
+{% block content %}
+{% render_table table %}
+{% endblock %}
+hx-get="{% url 'searchprofile:brand_detail' record.pk %}"

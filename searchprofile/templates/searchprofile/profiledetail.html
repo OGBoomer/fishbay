@@ -2,16 +2,15 @@
 
 {% block content %}
 <script>
-		window.onload = function(){
-			const id = document.getElementById('top-page');
-			if (id != null) {
-				alert('not null'); // should never fire as only fragment is loaded via htmx not document
-			} else {
-				window.location.replace("http://127.0.0.1:8000/");
-			}
-		
+	window.onload = function(){
+		const id = document.getElementById('top-page');
+		if (id != null) {
+			alert('not null'); // should never fire as only fragment is loaded via htmx not document
+		} else {
+			window.location.replace("http://127.0.0.1:8000/");
 		}
-	</script>
+	}
+</script>
 {% block search-form %}
 <!-- check if browser reload button was used, if so then redirect to home page -->
 <script>

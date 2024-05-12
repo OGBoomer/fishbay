@@ -9,7 +9,7 @@
 		<div class="card-body">
 			<div class='row'>
 				<div class='col text-center'>
-					<h5>Add a new brand</h5>
+					<h5>Create a new brand</h5>
 				</div>
 			</div>
 			<div class='row'>
@@ -33,7 +33,7 @@
 								hx-target='#form-container'
 								hx-swap='outerHTML' 
 								hx-trigger='click'>
-								Add Brand
+								Create Brand
 							</button>
 						</div>
 					</form>
@@ -45,7 +45,7 @@
 {% endblock %}
 <div class='container d-flex justify-content-center' hx-trigger='brand_added from:body'
 													 hx-get="{% url 'searchprofile:update_brand_list' %}"
-													 hx-target='#table-container'
+													 hx-target='#brand_list'
 													 hx-swap='outerHTML'>
 	<div class="card mt-5 w-100">
 		<div class="card-body" hx-trigger='check_notice from:body'
@@ -60,23 +60,63 @@
 								<input type='text' name='filter_text', 
 													hx-trigger='keyup delay:750ms' 
 													hx-post="{% url 'searchprofile:update_brand_list' %}"
-													hx-target='#brand-list-table'
+													hx-target='#brand_list'
 													hx-swap='innerHTML'>
 							</form>
 					</div>
-					
-					<div id='notice' class='text-success text-center'></div>
+					<div id='notice-block'>
+					{% block notice %}
+						{% if notice %}
+							<div class='text-success text-center'>
+								<h6>{{ notice }}</h6>
+							</div>
+						{% endif %}
+					{% endblock %}
+					</div>
 					<h3>Brand List</h3>
 				</div>
 			</div>
-			
+			<div id='brand_list'>
+			{% block brand-list %}
+				{% if brands.count > 0 %}
+					{% for brand in brands %}
+						<div class='row mb-2 d-flex justify-content-start justify-content-lg-center' id='brand{{brand.pk}}'>
+							<div class='col-12 col-lg-7 text-dark'>	
+								{{ brand.name }} 
+							</div>
+							<div class='col-2'>
+								<button class='btn tt' title='See research for this brand' 
+								hx-get="{% url 'searchprofile:brand_detail' brand.pk %}", 
+								hx-target='#newcontent',
+								hx-swap='innerHTML',
+								hx-push-url='true',
+								hx-trigger='click'>
+								<i class="fa-solid fa-clipboard fa-xl"></i> 
+								</button>
+							</div>
+							<div class='col-2'>
+								<button class='btn btn-sm tt' title='Delete this profile'
+								hx-get="{% url 'searchprofile:delete_brand' brand.pk %}"
+								hx-target='#brand{{brand.pk}}'
+								hx-swap='delete'
+								hx-confirm='Please confirm you wish to delete the brand {{brand.name}}. All associated searches and profiles will also be deleted'
+								hx-trigger='click'>
+								<i class="fa-solid fa-trash-can fa-xl"></i>
+								</button>
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<div class='row'>
+						<div class='col'>
+							<div class='text-center card-text'>You haven't created any brands yet.</div>
+						</div>
+					</div>
+				{% endif %}
+			{% endblock %}
+			</div>
 		</div>
-		{% block brand-list-table %}
-		<div id='brand-list-table'>
-			{% render_table table %}
-		</div>
-		{% endblock %}
-		
 	</div>
+	{% render_table table %}
 </div>
 {% endblock %}

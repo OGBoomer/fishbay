@@ -5,10 +5,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils.http import urlencode
+from django_tables2 import RequestConfig
 from O365 import Account
 from specs.models import *
 from .models import *
 from .forms import *
+from .tables import BrandTable
 import requests
 import json
 import string
@@ -72,20 +74,24 @@ def brand_list(request):
     if request.method == 'POST':
         form = CreateBrandForm(request.POST)
         if form.is_valid():
-            triggers = '{"check_notice": "", "brand_added": ""}'
+            triggers = '{"brand_added": ""}'
             cd = form.cleaned_data
             create_brand(cd['name'], request.user)
             context = {'form': CreateBrandForm()}
         else:
             context = {'form': CreateBrandForm()}
         html = render_block_to_string('searchprofile/brandlist.html', 'brand-form', context)
+        html = render_block_to_string("searchprofile/partials/notice_file.html", 'notice_block', {'thismessage': 'notice', 'thisnotice': 'New Brand Added'}) + html
         response = HttpResponse(html)
         response['HX-Trigger'] = triggers
         return response
     else:
+        table = BrandTable(Brand.objects.filter(user=request.user))
+        RequestConfig(request, paginate={"per_page": 2}).configure(table)
         context = {
             'form': CreateBrandForm(),
-            'brands': Brand.objects.filter(user=request.user)
+            'brands': Brand.objects.filter(user=request.user),
+            'table': table
         }
     return render(request, 'searchprofile/brandlist.html', context)
 
@@ -107,16 +113,18 @@ def update_profile_list(request):
 
 
 def update_brand_list(request):
-    if request.method == 'POST':
-        filter_text = request.POST['filter_text']
-    else:
-        filter_text = ''
-    request.session['notice'] = 'Brand created.'
-    context = {'brands': Brand.objects.filter(name__istartswith=filter_text, user=request.user)}
-    html = render_block_to_string('searchprofile/brandlist.html', 'brand-list', context)
+    filter_text = reqeust.POST['filter_text'] if 'filter_text' in request.POST else ''
+    table = get_brand_table(request.user, filter_text)
+    RequestConfig(request, paginate={"per_page": 2}).configure(table)
+    context = {'table': table, 'request': request}
+    html = render_block_to_string('searchprofile/brandlist.html', 'brand-list-table', context)
     response = HttpResponse(html)
-    response['HX-Trigger'] = 'check_notice'
     return response
+
+
+def get_brand_table(user, filter_text=''):
+    table = BrandTable(Brand.objects.filter(name__istartswith=filter_text, user=user))
+    return table
 
 
 @ login_required()
